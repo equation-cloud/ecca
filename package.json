@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/equation-cloud/ecca/issues"
   },
-  "homepage": "https://github.com/equation-cloud/ecca#readme"
+  "homepage": "https://github.com/equation-cloud/ecca#readme",
+  "dependencies": {
+    "typescript": "^2.2.2"
+  }
 }
