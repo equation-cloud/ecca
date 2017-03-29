@@ -1,4 +1,5 @@
 .vscode/
+coverage/
 src/
 node_modules/
 tsconfig.json

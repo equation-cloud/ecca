@@ -4,9 +4,13 @@
   ],
   "compilerOptions": {
     "declaration": true,
-    "module": "commonjs",
     "noImplicitAny": false,
+    "module": "commonjs",
     "outDir": "lib/",
+    "sourceMap": true,
     "target": "es5"
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
