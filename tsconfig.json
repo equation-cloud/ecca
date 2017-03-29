@@ -5,8 +5,8 @@
   "compilerOptions": {
     "declaration": true,
     "module": "commonjs",
-    "noImplicitAny": true,
-    "outDir": "dist/",
+    "noImplicitAny": false,
+    "outDir": "lib/",
     "target": "es5"
   }
 }
