@@ -1,5 +1,8 @@
 export class Equation {
-  public get Greet() : string {
-    return "Hello, World!";
+  private inputString : string;
+  
+  get InputString() : string { return this.inputString; }
+  set InputString(inputString: string) {
+    this.inputString = inputString;
   }
 }

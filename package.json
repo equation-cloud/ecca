@@ -17,5 +17,7 @@
     "url": "https://github.com/equation-cloud/ecca/issues"
   },
   "homepage": "https://github.com/equation-cloud/ecca#readme",
-  "dependencies": {}
+  "dependencies": {
+    "chevrotain": "^0.27.1"
+  }
 }
