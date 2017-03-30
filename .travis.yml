@@ -8,4 +8,6 @@ after_script:
   - cat ./coverage/*/lcovonly | ./node_modules/coveralls/bin/coveralls.js
 addons:
   firefox: "52.0"
-
+branches:
+  only:
+    - master
