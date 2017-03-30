@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/karma/bin/karma start --single-run"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,16 @@
     "url": "https://github.com/equation-cloud/ecca/issues"
   },
   "homepage": "https://github.com/equation-cloud/ecca#readme",
-  "dependencies": {}
+  "dependencies": {
+    "chevrotain": "^0.27.1"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.47",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-typescript": "^2.1.7",
+    "typescript": "~2.1.6"
+  }
 }
