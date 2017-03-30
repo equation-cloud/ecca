@@ -1,4 +1,4 @@
-export class Equation {
+export class Expression {
   private inputString : string;
   
   get InputString() : string { return this.inputString; }
