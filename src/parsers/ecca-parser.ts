@@ -1,4 +1,5 @@
-import {IParser} from '../parser'
+import { IParser } from '../parser'
+import { IElement, IntegerElement } from '../elements'
 import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
@@ -15,7 +16,7 @@ export class EccaParser implements IParser {
     this.parser = new Parser();
   }
 
-  ParseString(input : string) : any {
+  ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
     return this.parser['Integer']();
@@ -26,8 +27,8 @@ class Parser extends chev.Parser {
   constructor() {
     super([], AllTokens);
 
-    this.RULE("Integer", () => {
-      return this.CONSUME(integer).image; //this is not correct I think, but getImage doesn't seem to be defined.
+    this.RULE<IElement>("Integer", () => {
+      return new IntegerElement(this.CONSUME(integer).image); //this is not correct, but getImage doesn't seem to be defined.
     })
 
     chev.Parser.performSelfAnalysis(this);
