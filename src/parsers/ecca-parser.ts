@@ -21,7 +21,7 @@ export class EccaParser implements IParser {
     this.parser = new Parser();
   }
 
-  ParseString(input : string) : IElement {
+  public ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
     return this.parser['Division']();
@@ -35,7 +35,7 @@ interface Parser {
   Divide? : () => IElement;
 }
 
-class Parser extends chev.Parser implements IParser {
+class Parser extends chev.Parser {
   constructor() {
     super([], AllTokens);
 
