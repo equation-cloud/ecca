@@ -45,7 +45,6 @@ class Parser extends chev.Parser implements IParser {
     this.RULE<IElement>("Decimal", () => {
       let decimalString : string = this.CONSUME(decimal).image; //this is not correct, but getImage doesn't seem to be defined.
       let decimalSplit = decimalString.split('.');
-      console.log(decimalString, decimalSplit);
       if(decimalSplit[0] === "") {
         return new FractionalElement("0", decimalSplit[1]); //number had no leading 0 (i.e. .97)
       } else {
