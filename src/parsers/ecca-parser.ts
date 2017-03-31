@@ -1,10 +1,16 @@
 import { IParser } from '../parser'
-import { IElement, IntegerElement, FractionalElement } from '../elements'
+import { 
+  IElement, 
+  IntegerElement, 
+  FractionalElement, 
+  DivisionElement
+} from '../elements'
 import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
-let AllTokens = [decimal, integer];
+let divide = chev.createToken({name: "divide", pattern: /\//});
+let AllTokens = [decimal, integer, divide];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -18,20 +24,36 @@ export class EccaParser implements IParser {
   ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    return this.parser['Number']();
+    return this.parser['Division']();
   }
 }
 
 interface Parser {
   Integer? : () => IElement;
   Decimal? : () => IElement;
+  Number? : () => IElement;
+  Divide? : () => IElement;
 }
 
 class Parser extends chev.Parser implements IParser {
   constructor() {
     super([], AllTokens);
 
-    this.RULE<IElement>("Number", () => {
+    this.RULE<IElement>('Division', () => {
+      let operands: IElement[] = [];
+      operands.push(this.SUBRULE1<IElement>(this.Number));
+      this.OPTION(() => {
+        this.CONSUME(divide);
+        operands.push(this.SUBRULE2<IElement>(this.Number));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new DivisionElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Number', () => {
       return this.OR<IElement>([
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
