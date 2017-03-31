@@ -2,6 +2,7 @@ import { EccaParser } from './ecca-parser'
 
 describe('EccaParser: ParseString', () => {
   let eccaParser = new EccaParser();
+  //Integers
   it('will parse single integer strings to IElements of type "integer"', () => {
     expect(eccaParser.ParseString('0').type).toBe('integer');
     expect(eccaParser.ParseString('1').type).toBe('integer');
@@ -12,6 +13,7 @@ describe('EccaParser: ParseString', () => {
     expect(eccaParser.ParseString('1').value).toBe(1);
     expect(eccaParser.ParseString('23').value).toBe(23);
   });
+  //Decimals
   it('will parse decimal strings to IElements of type "fractional"', () => {
     expect(eccaParser.ParseString('0.0').type).toBe('fractional');
     expect(eccaParser.ParseString('0.4').type).toBe('fractional');
@@ -36,5 +38,38 @@ describe('EccaParser: ParseString', () => {
     expect(eccaParser.ParseString('3.1415926').denominator).toBe(10000000);
     expect(eccaParser.ParseString('.97').denominator).toBe(100);
     expect(eccaParser.ParseString('.00012345').denominator).toBe(100000000);
+  });
+  //Division
+  it('will parse division to IElements of type "division"', () => {
+    expect(eccaParser.ParseString('1/2').type).toBe('division');
+    expect(eccaParser.ParseString('0/2123.2344').type).toBe('division');
+    expect(eccaParser.ParseString('0.3453/2.554').type).toBe('division');
+    expect(eccaParser.ParseString('.1121/.9759').type).toBe('division');
+    expect(eccaParser.ParseString('9649.23523/53825').type).toBe('division');
+    expect(eccaParser.ParseString('9649.23523/0').type).toBe('division');
+  });
+  it('will parse division to IElements with two operands', () => {
+    expect(eccaParser.ParseString('1/2').operands.length).toBe(2);
+    expect(eccaParser.ParseString('0/2123.2344').operands.length).toBe(2);
+    expect(eccaParser.ParseString('0.3453/2.554').operands.length).toBe(2);
+    expect(eccaParser.ParseString('.1121/.9759').operands.length).toBe(2);
+    expect(eccaParser.ParseString('9649.23523/53825').operands.length).toBe(2);
+    expect(eccaParser.ParseString('9649.23523/0').operands.length).toBe(2);
+  });
+  it('will parse division to IElements with the first operand having the correct type', () => {
+    expect(eccaParser.ParseString('1/2').operands[0].type).toBe('integer');
+    expect(eccaParser.ParseString('0/2123.2344').operands[0].type).toBe('integer');
+    expect(eccaParser.ParseString('0.3453/2.554').operands[0].type).toBe('fractional');
+    expect(eccaParser.ParseString('.1121/.9759').operands[0].type).toBe('fractional');
+    expect(eccaParser.ParseString('9649.23523/53825').operands[0].type).toBe('fractional');
+    expect(eccaParser.ParseString('9649.23523/0').operands[0].type).toBe('fractional');
+  });
+  it('will parse division to IElements with the second operand having the correct type', () => {
+    expect(eccaParser.ParseString('1/2').operands[1].type).toBe('integer');
+    expect(eccaParser.ParseString('0/2123.2344').operands[1].type).toBe('fractional');
+    expect(eccaParser.ParseString('0.3453/2.554').operands[1].type).toBe('fractional');
+    expect(eccaParser.ParseString('.1121/.9759').operands[1].type).toBe('fractional');
+    expect(eccaParser.ParseString('9649.23523/53825').operands[1].type).toBe('integer');
+    expect(eccaParser.ParseString('9649.23523/0').operands[1].type).toBe('integer');
   });
 });
