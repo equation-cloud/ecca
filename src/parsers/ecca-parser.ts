@@ -1,11 +1,10 @@
 import { IParser } from '../parser'
-import { IElement, IntegerElement } from '../elements'
+import { IElement, IntegerElement, FractionalElement } from '../elements'
 import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
-let AllTokens = [
-  integer
-];
+let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
+let AllTokens = [decimal, integer];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -19,17 +18,35 @@ export class EccaParser implements IParser {
   ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    return this.parser['Integer']();
+    return this.parser['Number']();
   }
 }
 
-class Parser extends chev.Parser {
+interface Parser {
+  Integer? : () => IElement;
+  Decimal? : () => IElement;
+}
+
+class Parser extends chev.Parser implements IParser {
   constructor() {
     super([], AllTokens);
 
+    this.RULE<IElement>("Number", () => {
+      return this.OR<IElement>([
+        {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
+        {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
+      ]);
+    });
+
     this.RULE<IElement>("Integer", () => {
       return new IntegerElement(this.CONSUME(integer).image); //this is not correct, but getImage doesn't seem to be defined.
-    })
+    });
+
+    this.RULE<IElement>("Decimal", () => {
+      let decimalString : string = this.CONSUME(decimal).image; //this is not correct, but getImage doesn't seem to be defined.
+      let decimalSplit = decimalString.split('.');
+      return new FractionalElement(decimalSplit[0], decimalSplit[1]);
+    });
 
     chev.Parser.performSelfAnalysis(this);
   }
