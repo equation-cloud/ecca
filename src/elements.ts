@@ -46,3 +46,9 @@ export class DivisionElement extends OperatorElement {
     super('division', operands);
   }
 }
+
+export class ProductElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('product', operands);
+  }
+}
