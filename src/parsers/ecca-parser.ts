@@ -3,14 +3,16 @@ import {
   IElement, 
   IntegerElement, 
   FractionalElement, 
-  DivisionElement
+  DivisionElement,
+  ProductElement
 } from '../elements'
 import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
 let divide = chev.createToken({name: "divide", pattern: /\//});
-let AllTokens = [decimal, integer, divide];
+let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
+let AllTokens = [decimal, integer, divide, multiply];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -24,7 +26,9 @@ export class EccaParser implements IParser {
   public ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    return this.parser['Division']();
+    let retVal = this.parser['Product']();
+    console.log(retVal, this.parser);
+    return retVal;
   }
 }
 
@@ -32,16 +36,29 @@ interface Parser {
   Integer? : () => IElement;
   Decimal? : () => IElement;
   Number? : () => IElement;
-  Divide? : () => IElement;
+  Division? : () => IElement;
+  Product? : () => IElement;
 }
 
 class Parser extends chev.Parser {
   constructor() {
     super([], AllTokens);
 
+    this.RULE<IElement>('Product', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Division)];
+      this.MANY(() => {
+        this.CONSUME(multiply);
+        operands.push(this.SUBRULE2<IElement>(this.Division));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new ProductElement(operands);
+      }
+    });
+
     this.RULE<IElement>('Division', () => {
-      let operands: IElement[] = [];
-      operands.push(this.SUBRULE1<IElement>(this.Number));
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Number)];
       this.OPTION(() => {
         this.CONSUME(divide);
         operands.push(this.SUBRULE2<IElement>(this.Number));
