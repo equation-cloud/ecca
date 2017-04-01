@@ -64,3 +64,9 @@ export class SubtractionElement extends OperatorElement {
     super('subtraction', operands);
   }
 }
+
+export class EqualsElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('equals', operands);
+  }
+}
