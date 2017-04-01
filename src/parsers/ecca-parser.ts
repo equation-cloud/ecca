@@ -1,10 +1,24 @@
 import { IParser } from '../parser'
-import { IElement, IntegerElement, FractionalElement } from '../elements'
+import { 
+  IElement, 
+  IntegerElement, 
+  FractionalElement, 
+  DivisionElement,
+  ProductElement,
+  SumElement,
+  SubtractionElement,
+  EqualsElement
+} from '../elements'
 import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
-let AllTokens = [decimal, integer];
+let divide = chev.createToken({name: "divide", pattern: /\//});
+let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
+let plus = chev.createToken({name: 'plus', pattern: /\+/});
+let minus = chev.createToken({name: 'minus', pattern: /-/});
+let equals = chev.createToken({name: 'equals', pattern: /=/});
+let AllTokens = [decimal, integer, divide, multiply, plus, minus, equals];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -15,23 +29,94 @@ export class EccaParser implements IParser {
     this.parser = new Parser();
   }
 
-  ParseString(input : string) : IElement {
+  public ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    return this.parser['Number']();
+    return this.parser['Equals']();
   }
 }
 
 interface Parser {
   Integer? : () => IElement;
   Decimal? : () => IElement;
+  Number? : () => IElement;
+  Division? : () => IElement;
+  Product? : () => IElement;
+  Sum? : () => IElement;
+  Subtraction? : () => IElement;
+  Equals? : () => IElement;
 }
 
-class Parser extends chev.Parser implements IParser {
+class Parser extends chev.Parser {
   constructor() {
     super([], AllTokens);
 
-    this.RULE<IElement>("Number", () => {
+    this.RULE<IElement>('Equals', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Subtraction)];
+      this.OPTION(() => {
+        this.CONSUME(equals);
+        operands.push(this.SUBRULE2<IElement>(this.Subtraction));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new EqualsElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Subtraction', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Sum)];
+      this.OPTION(() => {
+        this.CONSUME(minus);
+        operands.push(this.SUBRULE2<IElement>(this.Sum));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new SubtractionElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Sum', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Product)];
+      this.MANY(() => {
+        this.CONSUME(plus);
+        operands.push(this.SUBRULE2<IElement>(this.Product));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new SumElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Product', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Division)];
+      this.MANY(() => {
+        this.CONSUME(multiply);
+        operands.push(this.SUBRULE2<IElement>(this.Division));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new ProductElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Division', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Number)];
+      this.OPTION(() => {
+        this.CONSUME(divide);
+        operands.push(this.SUBRULE2<IElement>(this.Number));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new DivisionElement(operands);
+      }
+    });
+
+    this.RULE<IElement>('Number', () => {
       return this.OR<IElement>([
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
