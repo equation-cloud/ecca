@@ -58,3 +58,9 @@ export class SumElement extends OperatorElement {
     super('sum', operands);
   }
 }
+
+export class SubtractionElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('subtraction', operands);
+  }
+}
