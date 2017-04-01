@@ -52,3 +52,9 @@ export class ProductElement extends OperatorElement {
     super('product', operands);
   }
 }
+
+export class SumElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('sum', operands);
+  }
+}

@@ -64,12 +64,12 @@ describe('EccaParser: ParseString (operators)', () => {
   });  
   //Addition
   it('will parse addition to IElements of type "sum"', () => {
-    expect(ecca.Parser.ParseString('1+2').type).toBe('product');
-    expect(ecca.Parser.ParseString('0+2123.2344').type).toBe('product');
-    expect(ecca.Parser.ParseString('0.3453+2.554').type).toBe('product');
-    expect(ecca.Parser.ParseString('.1121+.9759').type).toBe('product');
-    expect(ecca.Parser.ParseString('9649.23523+53825').type).toBe('product');
-    expect(ecca.Parser.ParseString('9649.23523+0').type).toBe('product');
+    expect(ecca.Parser.ParseString('1+2').type).toBe('sum');
+    expect(ecca.Parser.ParseString('0+2123.2344').type).toBe('sum');
+    expect(ecca.Parser.ParseString('0.3453+2.554').type).toBe('sum');
+    expect(ecca.Parser.ParseString('.1121+.9759').type).toBe('sum');
+    expect(ecca.Parser.ParseString('9649.23523+53825').type).toBe('sum');
+    expect(ecca.Parser.ParseString('9649.23523+0').type).toBe('sum');
   });
   it('will parse addition to IElements with the correct number of operands', () => {
     expect(ecca.Parser.ParseString('1+2').operands.length).toBe(2);
