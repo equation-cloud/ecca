@@ -4,7 +4,8 @@ import {
   IntegerElement, 
   FractionalElement, 
   DivisionElement,
-  ProductElement
+  ProductElement,
+  SumElement
 } from '../elements'
 import * as chev from 'chevrotain'
 
@@ -12,7 +13,8 @@ let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
 let divide = chev.createToken({name: "divide", pattern: /\//});
 let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
-let AllTokens = [decimal, integer, divide, multiply];
+let plus = chev.createToken({name: 'plus', pattern: /\+/});
+let AllTokens = [decimal, integer, divide, multiply, plus];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -26,9 +28,7 @@ export class EccaParser implements IParser {
   public ParseString(input : string) : IElement {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    let retVal = this.parser['Product']();
-    console.log(retVal, this.parser);
-    return retVal;
+    return this.parser['Sum']();
   }
 }
 
@@ -38,11 +38,25 @@ interface Parser {
   Number? : () => IElement;
   Division? : () => IElement;
   Product? : () => IElement;
+  Sum? : () => IElement;
 }
 
 class Parser extends chev.Parser {
   constructor() {
     super([], AllTokens);
+
+    this.RULE<IElement>('Sum', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Product)];
+      this.MANY(() => {
+        this.CONSUME(plus);
+        operands.push(this.SUBRULE2<IElement>(this.Product));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new SumElement(operands);
+      }
+    });
 
     this.RULE<IElement>('Product', () => {
       let operands: IElement[] = [this.SUBRULE1<IElement>(this.Division)];
