@@ -3,6 +3,7 @@ import {
   IElement, 
   IntegerElement, 
   FractionalElement, 
+  NegateElement,
   DivisionElement,
   ProductElement,
   SumElement,
@@ -117,10 +118,20 @@ class Parser extends chev.Parser {
     });
 
     this.RULE<IElement>('Number', () => {
-      return this.OR<IElement>([
+      let negate = false;
+      this.OPTION(() => {
+        this.CONSUME(minus);
+        negate = true;
+      });
+      let operand = this.OR<IElement>([
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
       ]);
+      if(negate) {
+        return new NegateElement(operand);
+      } else {
+        return operand;
+      }
     });
 
     this.RULE<IElement>("Integer", () => {
