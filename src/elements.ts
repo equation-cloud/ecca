@@ -41,6 +41,12 @@ export abstract class OperatorElement implements IElement {
   }
 }
 
+export class NegateElement extends OperatorElement {
+  constructor(operand: IElement) {
+    super('negate', [operand]);
+  }
+}
+
 export class DivisionElement extends OperatorElement {
   constructor(operands: IElement[]) {
     super('division', operands);
