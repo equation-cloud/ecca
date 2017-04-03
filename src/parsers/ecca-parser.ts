@@ -45,7 +45,7 @@ export class EccaParser implements IParser {
 }
 
 interface Parser {
-  Identifer? : () => IElement;
+  Identifier? : () => IElement;
   Integer? : () => IElement;
   Decimal? : () => IElement;
   Atomic? : () => IElement;
