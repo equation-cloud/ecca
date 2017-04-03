@@ -1,5 +1,7 @@
 export interface IElement {
   type: string;
+  //VariableElement
+  identifier?: string;
   //IntegerElement
   value?: number;
   //FractionalElement
@@ -7,6 +9,16 @@ export interface IElement {
   denominator?: number;
   //OperatorElement
   operands?: IElement[];
+}
+
+export class IdentifierElement implements IElement {
+  public type : string;
+  public identifier : string;
+
+  constructor(identifier: string) {
+    this.type = 'identifier';
+    this.identifier = identifier;
+  }
 }
 
 export class IntegerElement implements IElement {
@@ -38,6 +50,24 @@ export abstract class OperatorElement implements IElement {
   constructor(type: string, operands: IElement[]){
     this.type = type;
     this.operands = operands;
+  }
+}
+
+export class BracketsElement extends OperatorElement {
+  constructor(operand: IElement) { 
+    super('brackets', [operand]);
+  }
+}
+
+export class NegateElement extends OperatorElement {
+  constructor(operand: IElement) {
+    super('negate', [operand]);
+  }
+}
+
+export class PowerElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('power', operands);
   }
 }
 
