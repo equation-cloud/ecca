@@ -10,7 +10,8 @@ import {
   ProductElement,
   SumElement,
   SubtractionElement,
-  EqualsElement
+  EqualsElement,
+  IdentifierElement,
 } from '../elements'
 import * as chev from 'chevrotain'
 
@@ -24,7 +25,8 @@ let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
 let plus = chev.createToken({name: 'plus', pattern: /\+/});
 let minus = chev.createToken({name: 'minus', pattern: /-/});
 let equals = chev.createToken({name: 'equals', pattern: /=/});
-let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals];
+let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
+let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals, identifier];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -43,6 +45,7 @@ export class EccaParser implements IParser {
 }
 
 interface Parser {
+  Identifer? : () => IElement;
   Integer? : () => IElement;
   Decimal? : () => IElement;
   Atomic? : () => IElement;
@@ -143,6 +146,7 @@ class Parser extends chev.Parser {
         negate = true;
       });
       let operand = this.OR<IElement>([
+        {ALT: () => { return this.SUBRULE<IElement>(this.Identifier); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
         {ALT: () => { 
@@ -171,6 +175,10 @@ class Parser extends chev.Parser {
       } else {
         return new FractionalElement(decimalSplit[0], decimalSplit[1]);
       }
+    });
+
+    this.RULE<IElement>("Identifier", () => {
+      return new IdentifierElement(this.CONSUME(identifier).image);
     });
 
     chev.Parser.performSelfAnalysis(this);

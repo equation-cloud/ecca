@@ -1,5 +1,7 @@
 export interface IElement {
   type: string;
+  //VariableElement
+  identifier?: string;
   //IntegerElement
   value?: number;
   //FractionalElement
@@ -7,6 +9,16 @@ export interface IElement {
   denominator?: number;
   //OperatorElement
   operands?: IElement[];
+}
+
+export class IdentifierElement implements IElement {
+  public type : string;
+  public identifier : string;
+
+  constructor(identifier: string) {
+    this.type = 'identifier';
+    this.identifier = identifier;
+  }
 }
 
 export class IntegerElement implements IElement {
