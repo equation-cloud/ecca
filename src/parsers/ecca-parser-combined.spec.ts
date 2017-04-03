@@ -1,7 +1,7 @@
 import { EccaParser } from './ecca-parser'
 import * as ecca from '../index'
 
-describe('EccaParser: ParseString (operators)', () => {
+describe('EccaParser: ParseString (combined)', () => {
   it('will parse "5.35=1+.3*4.5+3" correctly', () => {
     expect(ecca.Parser.ParseString("5.35=1+.3*4.5+3").type).toBe('equals');
     expect(ecca.Parser.ParseString("5.35=1+.3*4.5+3").operands.length).toBe(2);
