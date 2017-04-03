@@ -3,6 +3,7 @@ import {
   IElement, 
   IntegerElement, 
   FractionalElement, 
+  BracketsElement,
   NegateElement,
   PowerElement,
   DivisionElement,
@@ -15,20 +16,22 @@ import * as chev from 'chevrotain'
 
 let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
+let openBracket = chev.createToken({name: 'openBracket', pattern: /\(/});
+let closeBracket = chev.createToken({name: 'closeBracket', pattern: /\)/});
 let power = chev.createToken({name: 'power', pattern: /\^/});
 let divide = chev.createToken({name: 'divide', pattern: /\//});
 let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
 let plus = chev.createToken({name: 'plus', pattern: /\+/});
 let minus = chev.createToken({name: 'minus', pattern: /-/});
 let equals = chev.createToken({name: 'equals', pattern: /=/});
-let AllTokens = [decimal, integer, power, divide, multiply, plus, minus, equals];
+let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
   private parser : Parser = null;
 
   constructor(){
-    this.lexer = new chev.Lexer(AllTokens);
+    this.lexer = new chev.Lexer(allTokens);
     this.parser = new Parser();
   }
 
@@ -42,7 +45,7 @@ export class EccaParser implements IParser {
 interface Parser {
   Integer? : () => IElement;
   Decimal? : () => IElement;
-  Number? : () => IElement;
+  Atomic? : () => IElement;
   Power? : () => IElement;
   Division? : () => IElement;
   Product? : () => IElement;
@@ -53,7 +56,7 @@ interface Parser {
 
 class Parser extends chev.Parser {
   constructor() {
-    super([], AllTokens);
+    super([], allTokens);
 
     this.RULE<IElement>('Equals', () => {
       let operands: IElement[] = [this.SUBRULE1<IElement>(this.Subtraction)];
@@ -121,10 +124,10 @@ class Parser extends chev.Parser {
     });
 
     this.RULE<IElement>('Power', () => {
-      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Number)];
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Atomic)];
       this.OPTION(() => {
         this.CONSUME(power);
-        operands.push(this.SUBRULE2<IElement>(this.Number));
+        operands.push(this.SUBRULE2<IElement>(this.Atomic));
       });
       if(operands.length == 1) {
         return operands[0];
@@ -133,7 +136,7 @@ class Parser extends chev.Parser {
       }
     })
 
-    this.RULE<IElement>('Number', () => {
+    this.RULE<IElement>('Atomic', () => {
       let negate = false;
       this.OPTION(() => {
         this.CONSUME(minus);
@@ -142,6 +145,12 @@ class Parser extends chev.Parser {
       let operand = this.OR<IElement>([
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
+        {ALT: () => { 
+          this.CONSUME(openBracket);
+          let operand = this.SUBRULE<IElement>(this.Subtraction);
+          this.CONSUME(closeBracket);
+          return new BracketsElement(operand);
+        }},
       ]);
       if(negate) {
         return new NegateElement(operand);
