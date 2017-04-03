@@ -41,6 +41,12 @@ export abstract class OperatorElement implements IElement {
   }
 }
 
+export class BracketsElement extends OperatorElement {
+  constructor(operand: IElement) { 
+    super('brackets', [operand]);
+  }
+}
+
 export class NegateElement extends OperatorElement {
   constructor(operand: IElement) {
     super('negate', [operand]);
