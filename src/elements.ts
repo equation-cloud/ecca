@@ -47,6 +47,12 @@ export class NegateElement extends OperatorElement {
   }
 }
 
+export class PowerElement extends OperatorElement {
+  constructor(operands: IElement[]) {
+    super('power', operands);
+  }
+}
+
 export class DivisionElement extends OperatorElement {
   constructor(operands: IElement[]) {
     super('division', operands);

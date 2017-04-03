@@ -4,6 +4,7 @@ import {
   IntegerElement, 
   FractionalElement, 
   NegateElement,
+  PowerElement,
   DivisionElement,
   ProductElement,
   SumElement,
@@ -12,14 +13,15 @@ import {
 } from '../elements'
 import * as chev from 'chevrotain'
 
-let integer = chev.createToken({name: "integer", pattern: /0|[1-9]\d*/});
-let decimal = chev.createToken({name: "decimal", pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
-let divide = chev.createToken({name: "divide", pattern: /\//});
+let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
+let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
+let power = chev.createToken({name: 'power', pattern: /\^/});
+let divide = chev.createToken({name: 'divide', pattern: /\//});
 let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
 let plus = chev.createToken({name: 'plus', pattern: /\+/});
 let minus = chev.createToken({name: 'minus', pattern: /-/});
 let equals = chev.createToken({name: 'equals', pattern: /=/});
-let AllTokens = [decimal, integer, divide, multiply, plus, minus, equals];
+let AllTokens = [decimal, integer, power, divide, multiply, plus, minus, equals];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -41,6 +43,7 @@ interface Parser {
   Integer? : () => IElement;
   Decimal? : () => IElement;
   Number? : () => IElement;
+  Power? : () => IElement;
   Division? : () => IElement;
   Product? : () => IElement;
   Sum? : () => IElement;
@@ -105,10 +108,10 @@ class Parser extends chev.Parser {
     });
 
     this.RULE<IElement>('Division', () => {
-      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Number)];
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Power)];
       this.OPTION(() => {
         this.CONSUME(divide);
-        operands.push(this.SUBRULE2<IElement>(this.Number));
+        operands.push(this.SUBRULE2<IElement>(this.Power));
       });
       if(operands.length == 1) {
         return operands[0];
@@ -116,6 +119,19 @@ class Parser extends chev.Parser {
         return new DivisionElement(operands);
       }
     });
+
+    this.RULE<IElement>('Power', () => {
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Number)];
+      this.OPTION(() => {
+        this.CONSUME(power);
+        operands.push(this.SUBRULE2<IElement>(this.Number));
+      });
+      if(operands.length == 1) {
+        return operands[0];
+      } else {
+        return new PowerElement(operands);
+      }
+    })
 
     this.RULE<IElement>('Number', () => {
       let negate = false;
