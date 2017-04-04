@@ -10,6 +10,7 @@
 ## Table of Contents
 
 - [Install](#install)
+- [Example](#example)
 
 ## Install
 
