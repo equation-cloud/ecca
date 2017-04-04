@@ -1,6 +1,6 @@
 # ecca
 
-**ecca** is the symbolic math library for Equation Cloud, it handles the parsing of mathmatical expressions and the simplification and manipulation o fexpression trees.
+**ecca** is the symbolic math library for Equation Cloud, it handles the parsing of mathmatical expressions, the simplification and manipulation of expression trees and conversion of expression trees into TeX strings.
 
 [![npm](https://img.shields.io/npm/v/ecca.svg)](https://www.npmjs.com/package/ecca)
 [![Build Status](https://api.travis-ci.org/equation-cloud/ecca.svg?branch=master)](https://travis-ci.org/equation-cloud/ecca)
