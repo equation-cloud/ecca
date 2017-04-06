@@ -22,7 +22,7 @@ $ npm install mysql
 
 ```sh
 let ecca = require('ecca')
-console.log(ecca.Parser.ParseString('y=x^2'))
+console.log(new ecca.Expression('y=x^2').ElementTree)
 ```
 
 Will output the correct expression tree:
