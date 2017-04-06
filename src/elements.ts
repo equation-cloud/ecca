@@ -21,25 +21,32 @@ export class IdentifierElement implements IElement {
   }
 }
 
-export class IntegerElement implements IElement {
-  public type : string;
-  public value : number;
+export abstract class ValueElement implements IElement {
+  public type : string
+  public value : number
 
-  constructor(value : string) {
-    this.type = 'integer';
-    this.value = parseInt(value);
+  constructor(type: string, value: number) {
+    this.type = type
+    this.value = value
   }
 }
 
-export class FractionalElement implements IElement {
-  public type : string;
+export class IntegerElement extends ValueElement {
+  constructor(value : string) {
+    super('integer', parseInt(value))
+  }
+}
+
+export class FractionalElement extends ValueElement {
   public denominator : number;
   public numerator : number;
 
   constructor(integerPart : string, fractionalPart : string) {
-    this.type = 'fractional';
-    this.denominator = Math.pow(10, fractionalPart.length);
-    this.numerator = parseInt(integerPart) * this.denominator + parseInt(fractionalPart);
+    let denominator : number = Math.pow(10, fractionalPart.length);
+    let numerator : number = parseInt(integerPart) * denominator + parseInt(fractionalPart);
+    super('fractional', numerator / denominator)
+    this.denominator = denominator
+    this.numerator = numerator;
   }
 }
 
