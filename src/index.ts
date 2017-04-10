@@ -5,7 +5,6 @@ import { generateRawTeXOutput } from './tex-output'
 
 export class Expression {
   private parser : IParser = new EccaParser()
-  private rawTeXLazy : string = ""
   public ElementTree : IElement = null
 
   constructor (input? : string){
@@ -18,12 +17,5 @@ export class Expression {
       default :
         throw 'Unknown type for constructing Expression: ' + typeof input
     }
-  }
-
-  public get rawTeX() {
-    if (!this.rawTeXLazy) {
-      this.rawTeXLazy = generateRawTeXOutput(this.ElementTree)
-    }
-    return this.rawTeXLazy
   }
 }
