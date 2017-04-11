@@ -10,7 +10,8 @@
 ## Table of Contents
 
 - [Install](#install)
-- [Example](#example)
+- [Parsing](#parsing)
+- [Elements](#elements)
 
 ## Install
 
@@ -18,7 +19,7 @@
 $ npm install mysql
 ```
 
-## Example
+## Parsing
 
 ```sh
 let ecca = require('ecca')
@@ -36,3 +37,18 @@ EqualsElement {
   ]
 }
 ```
+
+## Elements
+
+The following elements are currently supported
+
+| Element Name      | Type     | Parameters             | Notes                                        |
+|:----------------- | -------- |:---------------------- |:-------------------------------------------- |
+| IntegerElement    | Value    | Value                  | Can only be positive                         |
+| FractionElement   | Value    | Numerator, Denominator | Both values will only be positive            |
+| IdentifierElement |          | Identifier             | Will represent either variables or constants |
+| SumElement        | Operator | Operands               | Operands can be any length                   |
+
+
+
+
