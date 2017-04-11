@@ -1,4 +1,5 @@
 import { Expression } from './index'
+import { NegateElement, OperatorElement } from './elements'
 import { generateRawTeXOutput } from './tex-output'
 
 describe('Expression : Raw TeX output', () => {
@@ -39,12 +40,22 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeXOutput(new Expression('1*1=2*0.5').ElementTree)).toBe('1\\times 1=2\\times 0.5')
     expect(generateRawTeXOutput(new Expression('1.2=.3*4').ElementTree)).toBe('1.2=0.3\\times 4')
   })
-  it('will generate an error on an unknown element type', () => {
-    expect(() => { generateRawTeXOutput( {type: 'test'} ) } ).toThrowError()
-  })
   it('will generate the correct TeX output for identifiers', () => {
     expect(generateRawTeXOutput(new Expression('y').ElementTree)).toBe('y')
     expect(generateRawTeXOutput(new Expression('y=x+1').ElementTree)).toBe('y=x+1')
     expect(generateRawTeXOutput(new Expression('y=x*4').ElementTree)).toBe('y=x\\times 4')
+  })
+  it('will generate the correct TeX output for negation', () => {
+    expect(generateRawTeXOutput(new Expression('-y').ElementTree)).toBe('-y')
+    expect(generateRawTeXOutput(new Expression('y+-x').ElementTree)).toBe('y+-x')
+    expect(generateRawTeXOutput(new Expression('y=-(x*4)').ElementTree)).toBe('y=-\\left(x\\times 4\\right)')
+  })
+  it('will generate an error on an unknown element type', () => {
+    expect(() => { generateRawTeXOutput( {type: 'test'} ) } ).toThrowError()
+  })
+  it('will generate an error on an unknown operator element type', () => {
+    let unknownOperator = new NegateElement( {type: 'integer', value: 0} );
+    unknownOperator.type = 'test';
+    expect(() => { generateRawTeXOutput(unknownOperator) } ).toThrowError()
   })
 })
