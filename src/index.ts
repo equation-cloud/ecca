@@ -1,6 +1,7 @@
 import { IParser } from './parser'
 import { IElement } from './elements'
 import { EccaParser } from './parsers/ecca-parser'
+import { generateRawTeXOutput } from './tex-output'
 
 export class Expression {
   private parser : IParser = new EccaParser()
