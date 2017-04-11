@@ -11,6 +11,8 @@ function convertElement(element : IElement) : string {
       case 'power': texStrings = ['', '^{', '}']; break;
       case 'brackets': texStrings = ['\\left(', '', '\\right)']; break;
       case 'equals': texStrings = ['', '=', '']; break;
+      case 'negate': texStrings = ['-', '', '']; break;
+      default: throw new Error('Unkown operator elemnt type "' + element.type + '"')
     }
     let outputString = texStrings[0];
     for (let i = 0; i < element.operands.length; i++) {
