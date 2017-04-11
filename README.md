@@ -42,13 +42,26 @@ EqualsElement {
 
 The following elements are currently supported
 
-| Element Name      | Type     | Parameters             | Notes                                        |
-|:----------------- | -------- |:---------------------- |:-------------------------------------------- |
-| IntegerElement    | Value    | Value                  | Can only be positive                         |
-| FractionElement   | Value    | Numerator, Denominator | Both values will only be positive            |
-| IdentifierElement |          | Identifier             | Will represent either variables or constants |
-| SumElement        | Operator | Operands               | Operands can be any length                   |
+| Element Name       | Type     | Parameters             | Notes                                                 |
+|:------------------ | -------- |:---------------------- |:----------------------------------------------------- |
+| IntegerElement     | Value    | Value                  | Can only be positive                                  |
+| FractionElement    | Value    | Numerator, Denominator | Both values will only be positive                     |
+| IdentifierElement  |          | Identifier             | Will represent either variables or constants          |
+| EqualsElement      | Operator | Operands               | Can only have two operands                            |
+| SubtractionElement | Operator | Operands               | Can only have two operands                            |
+| SumElement         | Operator | Operands               | Operands can be any length                            |
+| ProductElement     | Operator | Operands               | Operands can be any length                            |
+| DivisionElement    | Operator | Operands               | Can only have two operands                            |
+| PowerElement       | Operator | Operands               | Can only have two operands                            |
+| NegateElement      | Operator | Operands               | Can only have one operands, used for negative numbers |
+| BracketsElement    | Operator | Operands               | Can only have one operands                            |
 
+## TeX Output
 
+To convert an expression into the TeX representation the following code should be used
 
-
+```sh
+let ecca = require('ecca')
+let expression = new ecca.Expression('y=x^2')
+let texString = generateRawTeXOutput(expression)
+```
