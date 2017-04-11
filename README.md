@@ -12,11 +12,12 @@
 - [Install](#install)
 - [Parsing](#parsing)
 - [Elements](#elements)
+- [Tex Output](#tex-output)
 
 ## Install
 
 ```sh
-$ npm install mysql
+$ npm install ecca
 ```
 
 ## Parsing
