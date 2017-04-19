@@ -64,5 +64,5 @@ To convert an expression into the TeX representation the following code should b
 ```sh
 let ecca = require('ecca')
 let expression = new ecca.Expression('y=x^2')
-let texString = generateRawTeXOutput(expression)
+let texString = generateRawTeXOutput(expression.ElementTree)
 ```
