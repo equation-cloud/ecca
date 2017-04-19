@@ -1,6 +1,6 @@
 import { IElement, OperatorElement } from './elements'
 
-function convertElement(element : IElement) : string {
+export function convertElement(element : IElement) : string {
   if(element instanceof OperatorElement) {
     let texStrings : string[] = null;
     switch (element.type) {
@@ -36,6 +36,3 @@ function convertElement(element : IElement) : string {
   }
 }
 
-export function generateRawTeXOutput(tree : IElement) : string {
-  return convertElement(tree)
-}
