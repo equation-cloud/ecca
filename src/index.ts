@@ -1,7 +1,7 @@
 import { IParser } from './parser'
 import { IElement } from './elements'
 import { EccaParser } from './parsers/ecca-parser'
-import { generateRawTeXOutput } from './tex-output'
+import { convertElement } from './tex-output'
 
 export class Expression {
   private parser : IParser = new EccaParser()
@@ -18,4 +18,8 @@ export class Expression {
         throw 'Unknown type for constructing Expression: ' + typeof input
     }
   }
+}
+
+export function generateRawTeXOutput(tree : IElement) : string {
+  return convertElement(tree)
 }
