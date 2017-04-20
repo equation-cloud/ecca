@@ -20,6 +20,10 @@ export class Expression {
   }
 }
 
-export function generateRawTeXOutput(tree : IElement) : string {
-  return convertElement(tree)
+export function generateRawTeXOutput(input : Expression | IElement) : string {
+  if (input instanceof Expression) {
+    return convertElement(input.ElementTree)
+  } else {
+    return convertElement(input)
+  }
 }
