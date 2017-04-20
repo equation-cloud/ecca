@@ -1,6 +1,6 @@
 import { Expression } from './index'
 import { NegateElement, OperatorElement } from './elements'
-import { generateRawTeXOutput } from './tex-output'
+import { generateRawTeXOutput } from './index'
 
 describe('Expression : Raw TeX output', () => {
   it('will generate the correct TeX output for numbers', () => {
@@ -11,14 +11,14 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeXOutput(new Expression('89.6665').ElementTree)).toBe('89.6665')
   })
   it('will generate the correct TeX output for sums', () => {
-    expect(generateRawTeXOutput(new Expression('1+1').ElementTree)).toBe('1+1')
-    expect(generateRawTeXOutput(new Expression('1+1+2').ElementTree)).toBe('1+1+2')
-    expect(generateRawTeXOutput(new Expression('1.2+.3').ElementTree)).toBe('1.2+0.3')
+    expect(generateRawTeXOutput(new Expression('1+1'))).toBe('1+1')
+    expect(generateRawTeXOutput(new Expression('1+1+2'))).toBe('1+1+2')
+    expect(generateRawTeXOutput(new Expression('1.2+.3'))).toBe('1.2+0.3')
   })
   it('will generate the correct TeX output for subtractions', () => {
-    expect(generateRawTeXOutput(new Expression('1-1').ElementTree)).toBe('1-1')
-    expect(generateRawTeXOutput(new Expression('1+1-2').ElementTree)).toBe('1+1-2')
-    expect(generateRawTeXOutput(new Expression('1.2-.3').ElementTree)).toBe('1.2-0.3')
+    expect(generateRawTeXOutput(new Expression('1-1'))).toBe('1-1')
+    expect(generateRawTeXOutput(new Expression('1+1-2'))).toBe('1+1-2')
+    expect(generateRawTeXOutput(new Expression('1.2-.3'))).toBe('1.2-0.3')
   })
   it('will generate the correct TeX output for products', () => {
     expect(generateRawTeXOutput(new Expression('1*1').ElementTree)).toBe('1\\times 1')
