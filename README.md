@@ -12,6 +12,7 @@
 - [Install](#install)
 - [Parsing](#parsing)
 - [Elements](#elements)
+- [Variables](#variables)
 - [Tex Output](#tex-output)
 
 ## Install
@@ -56,6 +57,10 @@ The following elements are currently supported
 | PowerElement       | Operator | Operands               | Can only have two operands                            |
 | NegateElement      | Operator | Operands               | Can only have one operands, used for negative numbers |
 | BracketsElement    | Operator | Operands               | Can only have one operands                            |
+
+## Variables
+
+Any identifer will be automatically assigned to be a variable, with details of each variable stored in a Variable class, and returned as an element of the ReadonlyArray<Variable> Expression.Variables. The Variable class contains the name of the variable and an array of elements which are this variable in the expression. The identified variables are also assigned string ids as part of the element.
 
 ## TeX Output
 
