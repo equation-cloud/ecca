@@ -1,6 +1,6 @@
 import { Expression } from './index'
 import { NegateElement, OperatorElement } from './elements'
-import { generateRawTeX } from './index'
+import { generateRawTeX, generateDecoratedTeX } from './index'
 
 describe('Expression : Raw TeX output', () => {
   it('will generate the correct TeX output for numbers', () => {
@@ -72,5 +72,15 @@ describe('Expression : Raw TeX output', () => {
     let unknownOperator = new NegateElement( {type: 'integer', value: 0} );
     unknownOperator.type = 'test';
     expect(() => { generateRawTeX(unknownOperator) } ).toThrowError()
+  })
+})
+
+describe('Expression : Raw TeX output', () => {
+  it('will generate the correct decoreated TeX output for identifiers', () => {
+    expect(generateDecoratedTeX(new Expression('y'))).toBe('\\cssId{y0}{y}')
+    expect(generateDecoratedTeX(new Expression('y=x+1'))).toBe('\\cssId{y0}{y}=\\cssId{x0}{x}+1')
+    expect(generateDecoratedTeX(new Expression('y=x*4'))).toBe('\\cssId{y0}{y}=\\cssId{x0}{x}\\times 4')
+    expect(generateDecoratedTeX(new Expression('y=x*4+x').ElementTree)).toBe('\\cssId{y0}{y}=\\cssId{x0}{x}\\times 4+\\cssId{x1}{x}')
+    expect(generateDecoratedTeX(new Expression('y=x^2/4').ElementTree)).toBe('\\cssId{y0}{y}=\\frac{\\cssId{x0}{x}^{2}}{4}')
   })
 })

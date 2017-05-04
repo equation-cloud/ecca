@@ -70,6 +70,18 @@ To convert an expression into the TeX representation the following code could be
 
 ```sh
 let ecca = require('ecca')
-let expression = new ecca.Expression('y=x^2')
+let expression = new ecca.Expression('y=x^2/4')
 let texString = generateRawTeX(expression)
+```
+
+will give the output 
+
+```sh
+y=\frac{x^{2}}{4}
+```
+
+It is also possible to output a decorated TeX string, useful for libraries such as MathJax where the \cssId{id}{...} tag is used around any elements which have a associated id set. To convert the expression into such a decorated string the function generateDecoratedTeX(expression) should be used instead, the above example would then output the following 
+
+```sh
+\cssId{y0}{y}=\frac{\cssId{x0}{x}^{2}}{4}
 ```
