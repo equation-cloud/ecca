@@ -1,6 +1,6 @@
 import { IElement, OperatorElement } from './elements'
 
-export function convertElement(element : IElement) : string {
+export function convertElement(element : IElement, decorate : boolean) : string {
   if(element instanceof OperatorElement) {
     let texStrings : string[] = null;
     switch (element.type) {
@@ -16,7 +16,7 @@ export function convertElement(element : IElement) : string {
     }
     let outputString = texStrings[0];
     for (let i = 0; i < element.operands.length; i++) {
-      outputString = outputString + convertElement(element.operands[i]);
+      outputString = outputString + convertElement(element.operands[i], decorate);
       if (i < element.operands.length - 1) {
         outputString = outputString + texStrings[1];
       }
@@ -24,15 +24,23 @@ export function convertElement(element : IElement) : string {
     outputString = outputString + texStrings[2];
     return outputString;
   } else {
+    let applyId = element.id && decorate
+    let returnValue = applyId ? '\\cssId{' + element.id + '}{' : ''
     switch (element.type) {
       case 'integer':
       case 'fractional':
-        return element.value.toString()
+        returnValue += element.value.toString()
+        break;
       case 'identifier':
-        return element.identifier
+        returnValue += element.identifier
+        break;
       default:
         throw new Error('Unknown element type "' + element.type + '"')
     }
+    if (applyId) {
+      returnValue += '}'
+    }
+    return returnValue
   }
 }
 
