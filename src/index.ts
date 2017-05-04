@@ -20,7 +20,7 @@ export class Expression {
   }
 }
 
-export function generateRawTeXOutput(input : Expression | IElement) : string {
+export function generateRawTeX(input : Expression | IElement) : string {
   if (input instanceof Expression) {
     return convertElement(input.ElementTree)
   } else {
