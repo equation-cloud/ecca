@@ -1,5 +1,6 @@
 export interface IElement {
   type: string;
+  id?: string;
   //VariableElement
   identifier?: string;
   //IntegerElement

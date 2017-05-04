@@ -10,4 +10,17 @@ describe('Expression : Constructor', () => {
   it('will throw an exception for an unknwon input type', () => {
     expect(() => {new Expression(1 as any)}).toThrow('Unknown type for constructing Expression: number')
   })
+  it('will generate the correct variable list from "y=y"', () => {
+    let expression = new Expression('y=y');
+    expect(expression.ElementTree.type).toBe('equals')
+    expect(expression.ElementTree.operands.length).toBe(2)
+    expect(expression.ElementTree.operands[0].type).toBe('identifier')
+    expect(expression.ElementTree.operands[0].id).toBe('y0')
+    expect(expression.ElementTree.operands[1].type).toBe('identifier')
+    expect(expression.ElementTree.operands[1].id).toBe('y1')
+    expect(expression.Variables[0].name).toBe('y')
+    expect(expression.Variables[0].instances.length).toBe(2)
+    expect(expression.Variables[0].instances[0]).toBe(expression.ElementTree.operands[0])
+    expect(expression.Variables[0].instances[1]).toBe(expression.ElementTree.operands[1])
+  })
 })
