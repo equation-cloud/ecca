@@ -75,7 +75,7 @@ describe('Expression : Raw TeX output', () => {
   })
 })
 
-describe('Expression : Raw TeX output', () => {
+describe('Expression : Decorated TeX output', () => {
   it('will generate the correct decoreated TeX output for identifiers', () => {
     expect(generateDecoratedTeX(new Expression('y'))).toBe('\\cssId{y0}{y}')
     expect(generateDecoratedTeX(new Expression('y=x+1'))).toBe('\\cssId{y0}{y}=\\cssId{x0}{x}+1')

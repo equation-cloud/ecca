@@ -63,6 +63,12 @@ export class FractionalElement extends ValueElement {
   }
 }
 
+export class UndefinedElement extends ValueElement {
+  constructor() {
+    super('undefined', NaN)
+  }
+}
+
 export abstract class OperatorElement implements IElement {
   public type : string;
   public operands: IElement[];
