@@ -1,6 +1,22 @@
 import { IElement, OperatorElement, FunctionElement } from './elements'
 
-export function convertElement(element : IElement, decorate : boolean) : string {
+export function generateRawTeX(input : Expression | IElement) : string {
+  if (input instanceof Expression) {
+    return convertElement(input.ElementTree, false)
+  } else {
+    return convertElement(input, false)
+  }
+}
+
+export function generateDecoratedTeX(input : Expression | IElement) : string {
+  if (input instanceof Expression) {
+    return convertElement(input.ElementTree, true)
+  } else {
+    return convertElement(input, true)
+  }
+}
+
+function convertElement(element : IElement, decorate : boolean) : string {
   if(element instanceof OperatorElement || element instanceof FunctionElement) {
     let texStrings : string[] = null;
     switch (element.type) {
@@ -45,4 +61,3 @@ export function convertElement(element : IElement, decorate : boolean) : string 
     return returnValue
   }
 }
-
