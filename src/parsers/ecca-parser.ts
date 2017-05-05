@@ -12,6 +12,7 @@ import {
   SubtractionElement,
   EqualsElement,
   IdentifierElement,
+  UndefinedElement
 } from '../elements'
 import * as chev from 'chevrotain'
 
@@ -25,8 +26,10 @@ let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
 let plus = chev.createToken({name: 'plus', pattern: /\+/});
 let minus = chev.createToken({name: 'minus', pattern: /-/});
 let equals = chev.createToken({name: 'equals', pattern: /=/});
-let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
-let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals, identifier];
+let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/});
+let nullToken = chev.createToken({name: 'nullToken', pattern: /n/});
+
+let allTokens = [nullToken, decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals, identifier];
 
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
@@ -45,6 +48,7 @@ export class EccaParser implements IParser {
 }
 
 interface Parser {
+  Undefined? : () => IElement;
   Identifier? : () => IElement;
   Integer? : () => IElement;
   Decimal? : () => IElement;
@@ -146,6 +150,7 @@ class Parser extends chev.Parser {
         negate = true;
       });
       let operand = this.OR<IElement>([
+        {ALT: () => { return this.SUBRULE<IElement>(this.Undefined); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Identifier); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
@@ -180,6 +185,11 @@ class Parser extends chev.Parser {
     this.RULE<IElement>("Identifier", () => {
       return new IdentifierElement(this.CONSUME(identifier).image);
     });
+
+    this.RULE<IElement>("Undefined", () => {
+      this.CONSUME(nullToken);
+      return new UndefinedElement();
+    })
 
     chev.Parser.performSelfAnalysis(this);
   }
