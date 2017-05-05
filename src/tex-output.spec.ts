@@ -73,6 +73,9 @@ describe('Expression : Raw TeX output', () => {
     unknownOperator.type = 'test';
     expect(() => { generateRawTeX(unknownOperator) } ).toThrowError()
   })
+  it('will generate the correct output for undefined', () => {
+    expect(generateRawTeX(new Expression('null'))).toBe('\\mathrm{undefined}')
+  })
 })
 
 describe('Expression : Decorated TeX output', () => {

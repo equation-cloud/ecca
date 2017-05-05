@@ -52,6 +52,9 @@ function convertElement(element : IElement, decorate : boolean) : string {
       case 'identifier':
         returnValue += element.identifier
         break;
+      case 'undefined':
+        returnValue += '\\mathrm{undefined}'
+        break;
       default:
         throw new Error('Unknown element type "' + element.type + '"')
     }

@@ -17,6 +17,7 @@ import {
   IntegerElement, 
   FractionalElement, 
   IdentifierElement,
+  UndefinedElement
 } from '../elements'
 import * as chev from 'chevrotain'
 
@@ -32,8 +33,9 @@ let closeBracket = chev.createToken({name: 'closeBracket', pattern: /\)/});
 let comma = chev.createToken({name: 'comma', pattern: /,/});
 let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
-let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
-let allTokens = [decimal, integer, openBracket, closeBracket, comma, factorial, power, divide, multiply, plus, minus, equals, identifier];
+
+let nullToken = chev.createToken({name: 'nullToken', pattern: /n/});
+let allTokens = [nullToken, decimal, integer, openBracket, closeBracket, comma, factorial, power, divide, multiply, plus, minus, equals, identifier];
 
 
 export class EccaParser implements IParser {
@@ -76,6 +78,7 @@ interface Parser {
   Integer? : () => IntegerElement;
   Decimal? : () => FractionalElement;
   Identifier? : () => IdentifierElement;
+  Undefined? : () => IElement;
 }
 
 class Parser extends chev.Parser {
@@ -191,6 +194,7 @@ class Parser extends chev.Parser {
         {ALT: () => { return this.SUBRULE<IElement>(this.Function); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Number); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Identifier); }},
+        {ALT: () => { return this.SUBRULE<IElement>(this.Undefined); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Brackets); }}
       ]);
       return isNegative ? new NegateElement(operand) : operand;
@@ -234,6 +238,11 @@ class Parser extends chev.Parser {
     });
 
     this.RULE<IElement>("Identifier", () => new IdentifierElement(this.CONSUME(identifier).image));
+
+    this.RULE<IElement>("Undefined", () => {
+      this.CONSUME(nullToken);
+      return new UndefinedElement();
+    })
 
     chev.Parser.performSelfAnalysis(this);
   }
