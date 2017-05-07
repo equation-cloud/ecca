@@ -54,9 +54,13 @@ export class FractionalElement extends ValueElement {
   public denominator : number;
   public numerator : number;
 
-  constructor(integerPart : string, fractionalPart : string) {
+  static CreateFromIntegerAndFractional(integerPart: string, fractionalPart: string) {
     let denominator : number = Math.pow(10, fractionalPart.length);
     let numerator : number = parseInt(integerPart) * denominator + parseInt(fractionalPart);
+    return new FractionalElement(numerator, denominator)
+  }
+
+  constructor(numerator : number, denominator : number) {
     super('fractional', numerator / denominator)
     this.denominator = denominator
     this.numerator = numerator;

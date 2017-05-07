@@ -231,9 +231,9 @@ class Parser extends chev.Parser {
       let decimalString : string = this.CONSUME(decimal).image; //this is not correct, but getImage doesn't seem to be defined.
       let decimalSplit = decimalString.split('.');
       if(decimalSplit[0] === "") {
-        return new FractionalElement("0", decimalSplit[1]); //number had no leading 0 (i.e. .97)
+        return FractionalElement.CreateFromIntegerAndFractional("0", decimalSplit[1]); //number had no leading 0 (i.e. .97)
       } else {
-        return new FractionalElement(decimalSplit[0], decimalSplit[1]);
+        return FractionalElement.CreateFromIntegerAndFractional(decimalSplit[0], decimalSplit[1]);
       }
     });
 
