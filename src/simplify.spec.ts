@@ -1,6 +1,6 @@
 import { Expression } from './expression'
 import * as simplify from './simplify'
-import { UndefinedElement } from './elements'
+import { UndefinedElement, FractionalElement } from './elements'
 
 describe('Simplification: Integer', () => {
   it('Should pass through integer elements', () => {
@@ -28,22 +28,22 @@ describe('Simplification: Undefined', () => {
 
 describe('Simplification: Fractional', () => {
   it(('The fraction cancels out then the returned value to be an integer of the correct value'), () => {
-    let simplified = simplify.simplify(new Expression('4/2'))
+    let simplified = simplify.simplify(new FractionalElement(4, 2))
     expect(simplified.type).toBe('integer')
     expect(simplified.value).toBe(2)
-    simplified = simplify.simplify(new Expression('9566808/4174'))
+    simplified = simplify.simplify(new FractionalElement(9566808, 4174))
     expect(simplified.type).toBe('integer')
     expect(simplified.value).toBe(2292)
   })
   it(('The fraction simplifies then the returned value to be the simplified fraction'), () => {
-    let simplified = simplify.simplify(new Expression('7/35'))
+    let simplified = simplify.simplify(new FractionalElement(7, 35))
     expect(simplified.type).toBe('fractional')
     expect(simplified.numerator).toBe(1)
     expect(simplified.denominator).toBe(5)
-    simplified = simplify.simplify(new Expression('918/1326'))
+    simplified = simplify.simplify(new FractionalElement(918, 1326))
     expect(simplified.type).toBe('fractional')
-    expect(simplified.numerator).toBe(27)
-    expect(simplified.denominator).toBe(39)
+    expect(simplified.numerator).toBe(9)
+    expect(simplified.denominator).toBe(13)
   })
 })
 
@@ -78,7 +78,7 @@ describe('Simplification: Power (SPOW-2)', () => {
   it('if the first operand is zero, and the second a variable, the result should be undefined', () => {
     expect(simplify.simplify(new Expression('0^x')).type).toBe('undefined')
   })
-  it('if the first operand is zero, and the second bracketes, the result should be undefined', () => {
+  it('if the first operand is zero, and the second brackets, the result should be undefined', () => {
     expect(simplify.simplify(new Expression('0^(x+2)')).type).toBe('undefined')
   })
 })
