@@ -1,6 +1,11 @@
 import { Expression } from './expression'
 import * as simplify from './simplify'
-import { UndefinedElement, FractionalElement } from './elements'
+import { 
+  UndefinedElement,
+  IntegerElement,
+  FractionalElement,
+  ProductElement
+} from './elements'
 
 describe('Simplification: Integer', () => {
   it('Should pass through integer elements', () => {
@@ -132,3 +137,26 @@ describe('Simplification: Power (SPOW-5)', () => {
     expect(simplify.simplify(expression)).toBe(expression.ElementTree)
   })
 });
+
+describe('Simplification: Product (SPRD-1)', () => {
+  it('should return undefined if any of the operands are undefined', () => {
+    let expression = new Expression('1*4.23*x*null')
+    expect(simplify.simplify(expression).type).toBe('undefined')
+  })
+});
+
+describe('Simplification: Product (SPRD-2)', () => {
+  it('should return zero if any of the operands are zero', () => {
+    let expression = new Expression('1*4.23*x*0')
+    expect(simplify.simplify(expression).type).toBe('integer')
+    expect(simplify.simplify(expression).value).toBe(0)
+  })
+});
+
+describe('Simplification: Product (SRPD-3)', () => {
+  it('should return the operand if the product element only has one', () => {
+    let expression = simplify.simplify(new ProductElement([new IntegerElement('82')]));
+    expect(expression.type).toBe('integer');
+    expect(expression.value).toBe(82);
+  })
+})
