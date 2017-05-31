@@ -1,7 +1,8 @@
 import { IElement } from './elements'
 import {
   IParser,
-  ILexerError
+  ILexerError,
+  IParserError
 } from './parser'
 import { EccaParser } from './parsers/ecca-parser'
 
@@ -19,7 +20,7 @@ export class Expression {
 
   public ElementTree : IElement = null;
   public LexerErrors? : ILexerError[] = null;
-  public ParserErrors? : any[] = null;
+  public ParserErrors? : IParserError[] = null;
 
   get Variables() : ReadonlyArray<Variable> {
     return this.variableList

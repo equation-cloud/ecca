@@ -45,8 +45,11 @@ export class EccaParser implements IParser {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
     let result: IParseResult = { ElementTree: this.parser['Equals']() };
-    if (lexerResult.errors.length > 0) {
+    if (lexerResult.errors && lexerResult.errors.length && lexerResult.errors.length > 0) {
       result.LexerErrors = lexerResult.errors;
+    }
+    if (this.parser.errors && this.parser.errors.length && this.parser.errors.length > 0) {
+      result.ParserErrors = this.parser.errors;
     }
     return result;
   }

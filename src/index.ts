@@ -5,13 +5,15 @@ import {
   Variable
 } from './expression'
 import {
-  ILexerError
+  ILexerError,
+  IParserError
 } from './parser'
 
 export { 
   Expression,
   Variable,
-  ILexerError
+  ILexerError,
+  IParserError
 }
 
 export function generateRawTeX(input : Expression | IElement) : string {

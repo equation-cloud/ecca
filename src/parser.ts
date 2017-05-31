@@ -7,10 +7,15 @@ export interface ILexerError {
   message: string;
 }
 
+export interface IParserError {
+  name: string;
+  message: string;
+}
+
 export interface IParseResult {
   ElementTree: IElement;
   LexerErrors?: ILexerError[];
-  ParserErrors?: any[];
+  ParserErrors?: IParserError[];
 }
 
 export interface IParser {

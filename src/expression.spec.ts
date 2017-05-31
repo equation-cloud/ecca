@@ -34,3 +34,13 @@ describe('Expression : Lexer errors', () => {
     expect(new Expression('y=x').LexerErrors).toBeUndefined()
   })
 })
+
+describe('Expression : Parser errors', () => {
+  // Again, no need to check actual errors (chevrotain developers should do that), just that we do or do not get them
+  it('will generate parser errors from invalid inputs', () => {
+    expect(new Expression('y=x=z').ParserErrors.length).toEqual(1)
+  })
+  it('will generate no parser errors from valid inputs', () => {
+    expect(new Expression('y=x').ParserErrors).toBeUndefined()
+  })
+})
