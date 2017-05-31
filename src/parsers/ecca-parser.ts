@@ -1,4 +1,7 @@
-import { IParser } from '../parser'
+import { 
+  IParser,
+  IParseResult
+} from '../parser'
 import { 
   IElement, 
   IntegerElement, 
@@ -28,6 +31,7 @@ let equals = chev.createToken({name: 'equals', pattern: /=/});
 let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
 let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals, identifier];
 
+
 export class EccaParser implements IParser {
   private lexer : chev.Lexer = null;
   private parser : Parser = null;
@@ -37,10 +41,14 @@ export class EccaParser implements IParser {
     this.parser = new Parser();
   }
 
-  public ParseString(input : string) : IElement {
+  public ParseString(input : string) : IParseResult {
     let lexerResult = this.lexer.tokenize(input);
     this.parser.input = lexerResult.tokens;
-    return this.parser['Equals']();
+    let result: IParseResult = { ElementTree: this.parser['Equals']() };
+    if (lexerResult.errors.length > 0) {
+      result.LexerErrors = lexerResult.errors;
+    }
+    return result;
   }
 }
 

@@ -4,10 +4,14 @@ import {
   Expression,
   Variable
 } from './expression'
+import {
+  ILexerError
+} from './parser'
 
 export { 
   Expression,
-  Variable
+  Variable,
+  ILexerError
 }
 
 export function generateRawTeX(input : Expression | IElement) : string {

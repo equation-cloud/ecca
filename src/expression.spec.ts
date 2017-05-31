@@ -24,3 +24,13 @@ describe('Expression : Constructor', () => {
     expect(expression.Variables[0].instances[1]).toBe(expression.ElementTree.operands[1])
   })
 })
+
+describe('Expression : Lexer errors', () => {
+  // No need to check actual errors, just that we do or do not get them
+  it('will generate lexer errors from invalid inputs', () => {
+    expect(new Expression('y=x<').LexerErrors.length).toEqual(1)
+  })
+  it('will generate no lexer errors from valid inputs', () => {
+    expect(new Expression('y=x').LexerErrors).toBeUndefined()
+  })
+})

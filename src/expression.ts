@@ -1,5 +1,8 @@
 import { IElement } from './elements'
-import { IParser } from './parser'
+import {
+  IParser,
+  ILexerError
+} from './parser'
 import { EccaParser } from './parsers/ecca-parser'
 
 export class Variable {
@@ -12,8 +15,11 @@ export class Variable {
 
 export class Expression {
   private parser : IParser = new EccaParser()
-  public ElementTree : IElement = null
   private variableList : Variable[] = [];
+
+  public ElementTree : IElement = null;
+  public LexerErrors? : ILexerError[] = null;
+  public ParserErrors? : any[] = null;
 
   get Variables() : ReadonlyArray<Variable> {
     return this.variableList
@@ -24,7 +30,10 @@ export class Expression {
       return;
     switch(typeof input) {
       case 'string' :
-        this.ElementTree = this.parser.ParseString(input);
+        let parserResult = this.parser.ParseString(input);
+        this.ElementTree = parserResult.ElementTree;
+        this.LexerErrors = parserResult.LexerErrors;
+        this.ParserErrors = parserResult.ParserErrors;
         this.getVariableList(this.ElementTree);
         break;
       default :
