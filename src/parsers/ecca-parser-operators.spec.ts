@@ -94,6 +94,36 @@ describe('EccaParser: ParseString (operators)', () => {
     expect(new EccaParser().ParseString('9649.23523*0*45*1.0*0.777*3').ElementTree.operands[4].type).toBe('fractional');
     expect(new EccaParser().ParseString('9649.23523*0*45*1.0*0.777*3').ElementTree.operands[5].type).toBe('integer');
   });  
+  it('will parser implicit multiplication in the form of number-identifier correctly', () => {
+    let exp = new EccaParser().ParseString('2x').ElementTree;
+    expect(exp.type).toBe('product');
+    expect(exp.operands.length).toBe(2);
+    expect(exp.operands[0].type).toBe('integer');
+    expect(exp.operands[0].value).toBe(2);
+    expect(exp.operands[1].type).toBe('identifier');
+    expect(exp.operands[1].identifier).toBe('x');
+  })
+  it('will parser implicit multiplication in the form of negate-number-identifier correctly', () => {
+    let exp = new EccaParser().ParseString('-2x').ElementTree;
+    expect(exp.type).toBe('negate');
+    expect(exp.operands.length).toBe(1);
+    expect(exp.operands[0].type).toBe('product');
+    expect(exp.operands[0].operands.length).toBe(2);
+    expect(exp.operands[0].operands[0].type).toBe('integer');
+    expect(exp.operands[0].operands[0].value).toBe(2);
+    expect(exp.operands[0].operands[1].type).toBe('identifier');
+    expect(exp.operands[0].operands[1].identifier).toBe('x');
+  })
+  it('will parser implicit multiplication in the form of number-brackets correctly', () => {
+    let exp = new EccaParser().ParseString('4.5(x+4)').ElementTree;
+    expect(exp.type).toBe('product');
+    expect(exp.operands.length).toBe(2);
+    expect(exp.operands[0].type).toBe('fractional');
+    expect(exp.operands[0].value).toBe(4.5);
+    expect(exp.operands[1].type).toBe('brackets');
+    expect(exp.operands[1].operands.length).toBe(1);
+    expect(exp.operands[1].operands[0].type).toBe('sum');
+  })
   //Addition
   it('will parse addition to IElements of type "sum"', () => {
     expect(new EccaParser().ParseString('1+2').ElementTree.type).toBe('sum');

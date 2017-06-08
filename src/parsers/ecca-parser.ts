@@ -4,32 +4,36 @@ import {
 } from '../parser'
 import { 
   IElement, 
+  EqualsElement,
+  SubtractionElement,
+  SumElement,
+  ProductElement,
+  DivisionElement,
+  PowerElement,
+  FactorialElement,
+  NegateElement,
+  BracketsElement,
+  FunctionElement,
   IntegerElement, 
   FractionalElement, 
-  BracketsElement,
-  NegateElement,
-  PowerElement,
-  DivisionElement,
-  ProductElement,
-  SumElement,
-  SubtractionElement,
-  EqualsElement,
   IdentifierElement,
 } from '../elements'
 import * as chev from 'chevrotain'
 
-let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
-let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
+let equals = chev.createToken({name: 'equals', pattern: /=/});
+let minus = chev.createToken({name: 'minus', pattern: /-/});
+let plus = chev.createToken({name: 'plus', pattern: /\+/});
+let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
+let divide = chev.createToken({name: 'divide', pattern: /\//});
+let power = chev.createToken({name: 'power', pattern: /\^/});
+let factorial = chev.createToken({name: 'factorial', pattern: /!/});
 let openBracket = chev.createToken({name: 'openBracket', pattern: /\(/});
 let closeBracket = chev.createToken({name: 'closeBracket', pattern: /\)/});
-let power = chev.createToken({name: 'power', pattern: /\^/});
-let divide = chev.createToken({name: 'divide', pattern: /\//});
-let multiply = chev.createToken({name: 'multiply', pattern: /\*/});
-let plus = chev.createToken({name: 'plus', pattern: /\+/});
-let minus = chev.createToken({name: 'minus', pattern: /-/});
-let equals = chev.createToken({name: 'equals', pattern: /=/});
+let comma = chev.createToken({name: 'comma', pattern: /,/});
+let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
+let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
 let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
-let allTokens = [decimal, integer, openBracket, closeBracket, power, divide, multiply, plus, minus, equals, identifier];
+let allTokens = [decimal, integer, openBracket, closeBracket, comma, factorial, power, divide, multiply, plus, minus, equals, identifier];
 
 
 export class EccaParser implements IParser {
@@ -56,16 +60,22 @@ export class EccaParser implements IParser {
 }
 
 interface Parser {
-  Identifier? : () => IElement;
-  Integer? : () => IElement;
-  Decimal? : () => IElement;
-  Atomic? : () => IElement;
-  Power? : () => IElement;
-  Division? : () => IElement;
-  Product? : () => IElement;
-  Sum? : () => IElement;
-  Subtraction? : () => IElement;
   Equals? : () => IElement;
+  Subtraction? : () => IElement;
+  Sum? : () => IElement;
+  Product? : () => IElement;
+  ImplicitOrDivision? : () => IElement;
+  ImplicitProduct? : () => IElement;
+  Division? : () => IElement;
+  Power? : () => IElement;
+  Factorial? : () => IElement;
+  Negate? : () => IElement;
+  Brackets? : () => BracketsElement;
+  Function? : () => FunctionElement;
+  Number? : () => IElement;
+  Integer? : () => IntegerElement;
+  Decimal? : () => FractionalElement;
+  Identifier? : () => IdentifierElement;
 }
 
 class Parser extends chev.Parser {
@@ -91,11 +101,7 @@ class Parser extends chev.Parser {
         this.CONSUME(minus);
         operands.push(this.SUBRULE2<IElement>(this.Sum));
       });
-      if(operands.length == 1) {
-        return operands[0];
-      } else {
-        return new SubtractionElement(operands);
-      }
+      return operands.length == 1 ? operands[0] : new SubtractionElement(operands);
     });
 
     this.RULE<IElement>('Sum', () => {
@@ -104,24 +110,47 @@ class Parser extends chev.Parser {
         this.CONSUME(plus);
         operands.push(this.SUBRULE2<IElement>(this.Product));
       });
-      if(operands.length == 1) {
-        return operands[0];
-      } else {
-        return new SumElement(operands);
-      }
+      return operands.length == 1 ? operands[0] : new SumElement(operands);
     });
 
     this.RULE<IElement>('Product', () => {
-      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Division)];
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.ImplicitOrDivision)];
       this.MANY(() => {
         this.CONSUME(multiply);
-        operands.push(this.SUBRULE2<IElement>(this.Division));
+        operands.push(this.SUBRULE2<IElement>(this.ImplicitOrDivision));
       });
-      if(operands.length == 1) {
-        return operands[0];
-      } else {
-        return new ProductElement(operands);
-      }
+      return operands.length == 1 ? operands[0] : new ProductElement(operands);
+    });
+
+    this.RULE<IElement>('ImplicitOrDivision' , () => {
+      return this.OR([
+        {ALT: () => this.SUBRULE<IElement>(this.ImplicitProduct)},
+        {ALT: () => this.SUBRULE<IElement>(this.Division)}
+      ])
+    })
+
+    this.RULE<IElement>('ImplicitProduct', () => {
+      let negate: boolean = false;
+      this.OPTION(() => {
+        this.CONSUME(minus);
+        negate = true;
+      });
+      let product = this.OR<IElement>([
+        {ALT: () => {
+          return new ProductElement([
+            this.SUBRULE1<IElement>(this.Number),
+            this.SUBRULE<IElement>(this.Identifier)
+          ]);
+        }},
+        {ALT: () => {
+          let operands = [this.SUBRULE2<IElement>(this.Number)];
+          this.AT_LEAST_ONE(() => {
+            operands.push(this.SUBRULE<IElement>(this.Brackets))
+          });
+          return new ProductElement(operands);
+        }}
+      ]);
+      return negate ? new NegateElement(product) : product;
     });
 
     this.RULE<IElement>('Division', () => {
@@ -130,53 +159,69 @@ class Parser extends chev.Parser {
         this.CONSUME(divide);
         operands.push(this.SUBRULE2<IElement>(this.Power));
       });
-      if(operands.length == 1) {
-        return operands[0];
-      } else {
-        return new DivisionElement(operands);
-      }
+      return operands.length == 1 ? operands[0] : new DivisionElement(operands);
     });
 
     this.RULE<IElement>('Power', () => {
-      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Atomic)];
+      let operands: IElement[] = [this.SUBRULE1<IElement>(this.Factorial)];
       this.OPTION(() => {
         this.CONSUME(power);
-        operands.push(this.SUBRULE2<IElement>(this.Atomic));
+        operands.push(this.SUBRULE2<IElement>(this.Factorial));
       });
-      if(operands.length == 1) {
-        return operands[0];
-      } else {
-        return new PowerElement(operands);
-      }
-    })
+      return operands.length == 1 ? operands[0] : new PowerElement(operands);
+    });
 
-    this.RULE<IElement>('Atomic', () => {
-      let negate = false;
+    this.RULE<IElement>('Factorial', () => {
+      let negateElement = this.SUBRULE<IElement>(this.Negate);
+      let isFactorial = false;
+      this.OPTION(() => {
+        this.CONSUME(factorial);
+        isFactorial = true;
+      });
+      return isFactorial ? new FactorialElement(negateElement) : negateElement;
+    });
+
+    this.RULE<IElement>('Negate', () => {
+      let isNegative = false;
       this.OPTION(() => {
         this.CONSUME(minus);
-        negate = true;
+        isNegative = true;
       });
       let operand = this.OR<IElement>([
+        {ALT: () => { return this.SUBRULE<IElement>(this.Function); }},
+        {ALT: () => { return this.SUBRULE<IElement>(this.Number); }},
         {ALT: () => { return this.SUBRULE<IElement>(this.Identifier); }},
-        {ALT: () => { return this.SUBRULE<IElement>(this.Integer); }},
-        {ALT: () => { return this.SUBRULE<IElement>(this.Decimal); }},
-        {ALT: () => { 
-          this.CONSUME(openBracket);
-          let operand = this.SUBRULE<IElement>(this.Subtraction);
-          this.CONSUME(closeBracket);
-          return new BracketsElement(operand);
-        }},
+        {ALT: () => { return this.SUBRULE<IElement>(this.Brackets); }}
       ]);
-      if(negate) {
-        return new NegateElement(operand);
-      } else {
-        return operand;
-      }
+      return isNegative ? new NegateElement(operand) : operand;
     });
 
-    this.RULE<IElement>("Integer", () => {
-      return new IntegerElement(this.CONSUME(integer).image); //this is not correct, but getImage doesn't seem to be defined.
+    this.RULE<BracketsElement>('Brackets', () => {
+      this.CONSUME(openBracket);
+      let returnValue = this.SUBRULE(this.Subtraction);
+      this.CONSUME(closeBracket);
+      return new BracketsElement(returnValue);
     });
+
+    this.RULE<IElement>('Function', () => {
+      let functionId = this.SUBRULE<IdentifierElement>(this.Identifier);
+      this.CONSUME(openBracket);
+      let operands = [];
+      this.MANY_SEP({SEP: comma, DEF: () => {
+        operands.push(this.SUBRULE(this.Subtraction));
+      }});
+      this.CONSUME(closeBracket);
+      return new FunctionElement(functionId, operands);
+    });
+
+    this.RULE<IElement>("Number", () => {
+      return this.OR<IElement>([
+        {ALT: () => this.SUBRULE(this.Integer)},
+        {ALT: () => this.SUBRULE(this.Decimal)}
+      ]);
+    });
+
+    this.RULE<IElement>("Integer", () => new IntegerElement(this.CONSUME(integer).image)); //this is not correct, but getImage doesn't seem to be defined.
 
     this.RULE<IElement>("Decimal", () => {
       let decimalString : string = this.CONSUME(decimal).image; //this is not correct, but getImage doesn't seem to be defined.
@@ -188,9 +233,7 @@ class Parser extends chev.Parser {
       }
     });
 
-    this.RULE<IElement>("Identifier", () => {
-      return new IdentifierElement(this.CONSUME(identifier).image);
-    });
+    this.RULE<IElement>("Identifier", () => new IdentifierElement(this.CONSUME(identifier).image));
 
     chev.Parser.performSelfAnalysis(this);
   }
