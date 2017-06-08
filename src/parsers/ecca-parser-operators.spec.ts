@@ -2,6 +2,24 @@ import { EccaParser } from './ecca-parser'
 import * as ecca from '../index'
 
 describe('EccaParser: ParseString (operators)', () => {
+  //Factorial
+  it('will parse factorials to IElements of type "factorial"', () => {
+    expect(new EccaParser().ParseString('1!').ElementTree.type).toBe('factorial');
+    expect(new EccaParser().ParseString('0!').ElementTree.type).toBe('factorial');
+    expect(new EccaParser().ParseString('3.665!').ElementTree.type).toBe('factorial');
+    expect(new EccaParser().ParseString('x!').ElementTree.type).toBe('factorial');
+    expect(new EccaParser().ParseString('(x+1)!').ElementTree.type).toBe('factorial');
+  });
+  it('will parse factorials to IElements with one operand', () => {
+    expect(new EccaParser().ParseString('1!').ElementTree.operands.length).toBe(1);
+  });
+  it('will parse factorials to IElements with one operand of the correct type', () => {
+    expect(new EccaParser().ParseString('1!').ElementTree.operands[0].type).toBe('integer');
+    expect(new EccaParser().ParseString('0!').ElementTree.operands[0].type).toBe('integer');
+    expect(new EccaParser().ParseString('3.665!').ElementTree.operands[0].type).toBe('fractional');
+    expect(new EccaParser().ParseString('x!').ElementTree.operands[0].type).toBe('identifier');
+    expect(new EccaParser().ParseString('(x+1)!').ElementTree.operands[0].type).toBe('brackets');
+  });
   //Power
   it('will parse exponents to IElements of type "power"', () => {
     expect(new EccaParser().ParseString('1^2').ElementTree.type).toBe('power');
