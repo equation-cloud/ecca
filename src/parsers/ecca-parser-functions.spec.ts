@@ -33,6 +33,6 @@ describe('EccaParser: ParseString (identifiers)', () => {
     expect(new EccaParser().ParseString("y(x,z)").ElementTree.operands[1].type).toBe('identifier');
     expect(new EccaParser().ParseString("Tf(5.6,f(g))").ElementTree.operands[0].type).toBe('fractional');
     expect(new EccaParser().ParseString("Tf(5.6,f(g))").ElementTree.operands[1].type).toBe('function');
-    expect(new EccaParser().ParseString("D(2+x)").ElementTree.operands[0].type).toBe('brackets');
+    expect(new EccaParser().ParseString("D(2+x)").ElementTree.operands[0].type).toBe('sum');
   });
 });
