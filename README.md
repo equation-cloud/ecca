@@ -44,19 +44,21 @@ EqualsElement {
 
 The following elements are currently supported
 
-| Element Name       | Type     | Parameters             | Notes                                                 |
-|:------------------ | -------- |:---------------------- |:----------------------------------------------------- |
-| IntegerElement     | Value    | Value                  | Can only be positive                                  |
-| FractionElement    | Value    | Numerator, Denominator | Both values will only be positive                     |
-| IdentifierElement  |          | Identifier             | Will represent either variables or constants          |
-| EqualsElement      | Operator | Operands               | Can only have two operands                            |
-| SubtractionElement | Operator | Operands               | Can only have two operands                            |
-| SumElement         | Operator | Operands               | Operands can be any length                            |
-| ProductElement     | Operator | Operands               | Operands can be any length                            |
-| DivisionElement    | Operator | Operands               | Can only have two operands                            |
-| PowerElement       | Operator | Operands               | Can only have two operands                            |
-| NegateElement      | Operator | Operands               | Can only have one operands, used for negative numbers |
-| BracketsElement    | Operator | Operands               | Can only have one operands                            |
+| Element Name       | Type       | Parameters             | Notes                                                 |
+|:------------------ | ---------- |:---------------------- |:----------------------------------------------------- |
+| IntegerElement     | Value      | Value                  | Can only be positive                                  |
+| FractionElement    | Value      | Numerator, Denominator | Both values will only be positive                     |
+| IdentifierElement  |            | Identifier             | Will represent either variables or constants          |
+| FunctionElement    | Identifier | Identifier, Operands   | Operands can be of any length                         |
+| BracketsElement    | Operator   | Operands               | Can only have one operand                             |
+| NegateElement      | Operator   | Operands               | Can only have one operands, used for negative numbers |
+| FactorialElement   | Operator   | Operands               | Can only have one operand                             |
+| PowerElement       | Operator   | Operands               | Can only have two operands                            |
+| DivisionElement    | Operator   | Operands               | Can only have two operands                            |
+| ProductElement     | Operator   | Operands               | Operands can be any length                            |
+| SumElement         | Operator   | Operands               | Operands can be any length                            |
+| SubtractionElement | Operator   | Operands               | Can only have two operands                            |
+| EqualsElement      | Operator   | Operands               | Can only have two operands                            |
 
 ## Variables
 
