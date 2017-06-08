@@ -18,7 +18,7 @@
 ## Install
 
 ```sh
-$ npm install ecca
+npm install ecca
 ```
 
 ## Parsing
@@ -35,7 +35,7 @@ EqualsElement {
   type: 'equals',
   operands: [
     IdentifierElement { type: 'identifier', identifier: 'y' },
-    PowerElement { type: 'power', operands: [Object] } 
+    PowerElement { type: 'power', operands: [Object] }
   ]
 }
 ```
@@ -60,7 +60,7 @@ The following elements are currently supported
 
 ## Variables
 
-Any identifer will be automatically assigned to be a variable, with details of each variable stored in a Variable class, and returned as an element of the ReadonlyArray<Variable> Expression.Variables. The Variable class contains the name of the variable and an array of elements which are this variable in the expression. The identified variables are also assigned string ids as part of the element.
+Any identifer will be automatically assigned to be a variable, with details of each variable stored in a Variable class, and returned as an element of the ReadonlyArray&lt;Variable&gt; Expression.Variables. The Variable class contains the name of the variable and an array of elements which are this variable in the expression. The identified variables are also assigned string ids as part of the element.
 
 ## TeX Output
 
