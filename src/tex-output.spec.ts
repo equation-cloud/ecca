@@ -35,6 +35,14 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeX(new Expression('1^(1^2)').ElementTree)).toBe('1^{\\left(1^{2}\\right)}')
     expect(generateRawTeX(new Expression('1.2^.3').ElementTree)).toBe('1.2^{0.3}')
   })
+  it('will generate the correct TeX output for factorial', () => {
+    expect(generateRawTeX(new Expression('1!'))).toBe('1!')
+    expect(generateRawTeX(new Expression('0.56!'))).toBe('0.56!')
+    expect(generateRawTeX(new Expression('x!'))).toBe('x!')
+    expect(generateRawTeX(new Expression('1+x!'))).toBe('1+x!')
+    expect(generateRawTeX(new Expression('x!*y!'))).toBe('x!\\times y!')
+    expect(generateRawTeX(new Expression('(1-y)!'))).toBe('\\left(1-y\\right)!')
+  })
   it('will generate the correct TeX output for equals', () => {
     expect(generateRawTeX(new Expression('1=1').ElementTree)).toBe('1=1')
     expect(generateRawTeX(new Expression('1*1=2*0.5').ElementTree)).toBe('1\\times 1=2\\times 0.5')
