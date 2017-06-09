@@ -58,6 +58,13 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeX(new Expression('y+-x').ElementTree)).toBe('y+-x')
     expect(generateRawTeX(new Expression('y=-(x*4)').ElementTree)).toBe('y=-\\left(x\\times 4\\right)')
   })
+  it('will generate the correct TeX output for functions', () => {
+    expect(generateRawTeX(new Expression('f()'))).toBe('f\\left(\\right)')
+    expect(generateRawTeX(new Expression('f(x)'))).toBe('f\\left(x\\right)')
+    expect(generateRawTeX(new Expression('f(1)'))).toBe('f\\left(1\\right)')
+    expect(generateRawTeX(new Expression('f(x+4)'))).toBe('f\\left(x+4\\right)')
+    expect(generateRawTeX(new Expression('f(y,x^2)'))).toBe('f\\left(y,x^{2}\\right)')
+  })
   it('will generate an error on an unknown element type', () => {
     expect(() => { generateRawTeX( {type: 'test'} ) } ).toThrowError()
   })
