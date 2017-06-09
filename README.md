@@ -18,7 +18,7 @@
 ## Install
 
 ```sh
-$ npm install ecca
+npm install ecca
 ```
 
 ## Parsing
@@ -35,7 +35,7 @@ EqualsElement {
   type: 'equals',
   operands: [
     IdentifierElement { type: 'identifier', identifier: 'y' },
-    PowerElement { type: 'power', operands: [Object] } 
+    PowerElement { type: 'power', operands: [Object] }
   ]
 }
 ```
@@ -44,23 +44,25 @@ EqualsElement {
 
 The following elements are currently supported
 
-| Element Name       | Type     | Parameters             | Notes                                                 |
-|:------------------ | -------- |:---------------------- |:----------------------------------------------------- |
-| IntegerElement     | Value    | Value                  | Can only be positive                                  |
-| FractionElement    | Value    | Numerator, Denominator | Both values will only be positive                     |
-| IdentifierElement  |          | Identifier             | Will represent either variables or constants          |
-| EqualsElement      | Operator | Operands               | Can only have two operands                            |
-| SubtractionElement | Operator | Operands               | Can only have two operands                            |
-| SumElement         | Operator | Operands               | Operands can be any length                            |
-| ProductElement     | Operator | Operands               | Operands can be any length                            |
-| DivisionElement    | Operator | Operands               | Can only have two operands                            |
-| PowerElement       | Operator | Operands               | Can only have two operands                            |
-| NegateElement      | Operator | Operands               | Can only have one operands, used for negative numbers |
-| BracketsElement    | Operator | Operands               | Can only have one operands                            |
+| Element Name       | Type       | Parameters             | Notes                                                 |
+|:------------------ | ---------- |:---------------------- |:----------------------------------------------------- |
+| IntegerElement     | Value      | Value                  | Can only be positive                                  |
+| FractionElement    | Value      | Numerator, Denominator | Both values will only be positive                     |
+| IdentifierElement  |            | Identifier             | Will represent either variables or constants          |
+| FunctionElement    | Identifier | Identifier, Operands   | Operands can be of any length                         |
+| BracketsElement    | Operator   | Operands               | Can only have one operand                             |
+| NegateElement      | Operator   | Operands               | Can only have one operands, used for negative numbers |
+| FactorialElement   | Operator   | Operands               | Can only have one operand                             |
+| PowerElement       | Operator   | Operands               | Can only have two operands                            |
+| DivisionElement    | Operator   | Operands               | Can only have two operands                            |
+| ProductElement     | Operator   | Operands               | Operands can be any length                            |
+| SumElement         | Operator   | Operands               | Operands can be any length                            |
+| SubtractionElement | Operator   | Operands               | Can only have two operands                            |
+| EqualsElement      | Operator   | Operands               | Can only have two operands                            |
 
 ## Variables
 
-Any identifer will be automatically assigned to be a variable, with details of each variable stored in a Variable class, and returned as an element of the ReadonlyArray<Variable> Expression.Variables. The Variable class contains the name of the variable and an array of elements which are this variable in the expression. The identified variables are also assigned string ids as part of the element.
+Any identifer will be automatically assigned to be a variable, with details of each variable stored in a Variable class, and returned as an element of the ReadonlyArray&lt;Variable&gt; Expression.Variables. The Variable class contains the name of the variable and an array of elements which are this variable in the expression. The identified variables are also assigned string ids as part of the element.
 
 ## TeX Output
 

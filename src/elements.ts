@@ -22,6 +22,18 @@ export class IdentifierElement implements IElement {
   }
 }
 
+export class FunctionElement extends IdentifierElement {
+  public type: string;
+  public identifier: string;
+  public operands: IElement[];
+
+  constructor(identifier: IdentifierElement, operands: IElement[]) {
+    super(identifier.identifier);
+    this.type = 'function';
+    this.operands = operands;
+  }
+}
+
 export abstract class ValueElement implements IElement {
   public type : string
   public value : number
@@ -70,6 +82,12 @@ export class BracketsElement extends OperatorElement {
 export class NegateElement extends OperatorElement {
   constructor(operand: IElement) {
     super('negate', [operand]);
+  }
+}
+
+export class FactorialElement extends OperatorElement {
+  constructor(operand: IElement) {
+    super('factorial', [operand]);
   }
 }
 

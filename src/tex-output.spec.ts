@@ -35,6 +35,14 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeX(new Expression('1^(1^2)').ElementTree)).toBe('1^{\\left(1^{2}\\right)}')
     expect(generateRawTeX(new Expression('1.2^.3').ElementTree)).toBe('1.2^{0.3}')
   })
+  it('will generate the correct TeX output for factorial', () => {
+    expect(generateRawTeX(new Expression('1!'))).toBe('1!')
+    expect(generateRawTeX(new Expression('0.56!'))).toBe('0.56!')
+    expect(generateRawTeX(new Expression('x!'))).toBe('x!')
+    expect(generateRawTeX(new Expression('1+x!'))).toBe('1+x!')
+    expect(generateRawTeX(new Expression('x!*y!'))).toBe('x!\\times y!')
+    expect(generateRawTeX(new Expression('(1-y)!'))).toBe('\\left(1-y\\right)!')
+  })
   it('will generate the correct TeX output for equals', () => {
     expect(generateRawTeX(new Expression('1=1').ElementTree)).toBe('1=1')
     expect(generateRawTeX(new Expression('1*1=2*0.5').ElementTree)).toBe('1\\times 1=2\\times 0.5')
@@ -49,6 +57,13 @@ describe('Expression : Raw TeX output', () => {
     expect(generateRawTeX(new Expression('-y').ElementTree)).toBe('-y')
     expect(generateRawTeX(new Expression('y+-x').ElementTree)).toBe('y+-x')
     expect(generateRawTeX(new Expression('y=-(x*4)').ElementTree)).toBe('y=-\\left(x\\times 4\\right)')
+  })
+  it('will generate the correct TeX output for functions', () => {
+    expect(generateRawTeX(new Expression('f()'))).toBe('f\\left(\\right)')
+    expect(generateRawTeX(new Expression('f(x)'))).toBe('f\\left(x\\right)')
+    expect(generateRawTeX(new Expression('f(1)'))).toBe('f\\left(1\\right)')
+    expect(generateRawTeX(new Expression('f(x+4)'))).toBe('f\\left(x+4\\right)')
+    expect(generateRawTeX(new Expression('f(y,x^2)'))).toBe('f\\left(y,x^{2}\\right)')
   })
   it('will generate an error on an unknown element type', () => {
     expect(() => { generateRawTeX( {type: 'test'} ) } ).toThrowError()
