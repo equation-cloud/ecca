@@ -33,7 +33,7 @@ let closeBracket = chev.createToken({name: 'closeBracket', pattern: /\)/});
 let comma = chev.createToken({name: 'comma', pattern: /,/});
 let integer = chev.createToken({name: 'integer', pattern: /0|[1-9]\d*/});
 let decimal = chev.createToken({name: 'decimal', pattern: /\.\d+|0\.\d+|[1-9]\d*\.\d+/});
-
+let identifier = chev.createToken({name: 'identifier', pattern: /[a-zA-Z]+/})
 let nullToken = chev.createToken({name: 'nullToken', pattern: /n/});
 let allTokens = [nullToken, decimal, integer, openBracket, closeBracket, comma, factorial, power, divide, multiply, plus, minus, equals, identifier];
 

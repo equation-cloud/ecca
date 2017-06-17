@@ -1,3 +1,4 @@
+import { Expression } from './expression'
 import { IElement, OperatorElement, FunctionElement } from './elements'
 
 export function generateRawTeX(input : Expression | IElement) : string {
