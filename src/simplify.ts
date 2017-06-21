@@ -17,7 +17,7 @@ import {
   EqualsElement
 } from './elements'
 
-// Functions to deal with fractional numbers
+// Functions to deal with rational numbers
 
 function greatestCommonDenominator(a: number, b: number) : number
 {
@@ -29,14 +29,18 @@ function greatestCommonDenominator(a: number, b: number) : number
   return a;
 }
 
-function simplifyRationalNumber(element: FractionalElement) : IElement
+function simplifyRationalNumber(element: FractionalElement | IntegerElement) : IElement
 {
-  let remainder = element.numerator % element.denominator;
-  if (remainder === 0) {
-    return new IntegerElement(Math.floor(element.numerator / element.denominator).toFixed(0));
+  if(element instanceof FractionalElement) {
+    let remainder = element.numerator % element.denominator;
+    if (remainder === 0) {
+      return new IntegerElement(Math.floor(element.numerator / element.denominator).toFixed(0));
+    } else {
+      let gcd = greatestCommonDenominator(element.numerator, element.denominator);
+      return new FractionalElement(element.numerator / gcd, element.denominator / gcd);
+    }
   } else {
-    let gcd = greatestCommonDenominator(element.numerator, element.denominator);
-    return new FractionalElement(element.numerator / gcd, element.denominator / gcd);
+    return element;
   }
 }
 
@@ -78,8 +82,12 @@ function simplifyPower(element: PowerElement) : IElement {
 
 // Simplifying Products
 
+function simplifyProductRecursive(operands : IElement[]) : IElement[] {
+  throw new Error('Not Implemented');
+}
+
 function simplifyProduct(ProductElement : IElement) : IElement {
-  ///SPRD-1
+  throw new Error('Not implemented');
 }
 
 function simplifyElement(element : IElement) : IElement {

@@ -24,7 +24,7 @@ describe('Simplification: Identifier', () => {
 })
 
 describe('Simplification: Undefined', () => {
-  it('Should pass through identifier elements', () => {
+  it('Should pass through undefined elements', () => {
     let simplified = simplify.simplify(new UndefinedElement())
     expect(simplified.type).toBe('undefined')
     expect(simplified.value).toBeNaN()
@@ -154,9 +154,58 @@ describe('Simplification: Product (SPRD-2)', () => {
 });
 
 describe('Simplification: Product (SRPD-3)', () => {
-  it('should return the operand if the product element only has one', () => {
+  it('should return the operand if the product element only has one operand', () => {
     let expression = simplify.simplify(new ProductElement([new IntegerElement('82')]));
     expect(expression.type).toBe('integer');
     expect(expression.value).toBe(82);
+  })
+})
+
+describe('Simplification: Product (SPRD-4)', () => {
+  it('should return the single operand if SimplifyProductRecursive only returns one operand', () => {
+    let expression = simplify.simplify(new Expression('2*3'));
+    expect(expression.type).toBe('integer');
+    expect(expression.value).toBe(6);
+  })
+  it('should return a product operator containing the returned operands from SimplifyProductRecursive if two or more operands are returned', () => {
+    let expression = simplify.simplify(new Expression('2x'));
+    expect(expression.type).toBe('product');
+    expect(expression.operands.length).toBe(2);
+    expect(expression.operands[0].type).toBe('integer');
+    expect(expression.operands[0].value).toBe(2);
+    expect(expression.operands[1].type).toBe('identifier');
+    expect(expression.operands[1].identifier).toBe('x');
+  })
+  it('should return 1 if SimplifyProductRecursive returns no operands', () => {
+    let expression = simplify.simplify(new Expression('1*1'));
+    expect(expression.type).toBe('integer');
+    expect(expression.value).toBe(1);
+  })
+})
+
+describe('Simplification: Product (SPRDREC-1)', () => {
+  it('should return an empty list from simplifyProductRecursive if there are two supplied constant operands whose product is 1', () => {
+    //This is checked by asserting that the output is 1, which isn't fully testing SPRDREC-1.1 but does get around the nt testing provate functions issue
+    let expression = simplify.simplify(new Expression('5*0.2'));
+    expect(expression.type).toBe('integer');
+    expect(expression.value).toBe(1);
+  })
+  it('should return a single element list from simplifyProductRecursive if there are two supplied constant operands whose product is not 1', () => {
+    //This is checked by asserting that the output is 1, which isn't fully testing SPRDREC-1.1 but does get around the nt testing provate functions issue
+    let expression = simplify.simplify(new Expression('5*0.3'));
+    expect(expression.type).toBe('fractional');
+    expect(expression.value).toBe(1.5);
+  })
+  it('should return the second operand only from simplifyProductRecursive if there are two supplied constant operands and the first is 1', () => {
+    //This is checked by asserting that the output is 1, which isn't fully testing SPRDREC-1.1 but does get around the nt testing provate functions issue
+    let expression = simplify.simplify(new Expression('1*0.3'));
+    expect(expression.type).toBe('fractional');
+    expect(expression.value).toBe(0.3);
+  })
+  it('should return the first operand only from simplifyProductRecursive if there are two supplied constant operands and the second is 1', () => {
+    //This is checked by asserting that the output is 1, which isn't fully testing SPRDREC-1.1 but does get around the nt testing provate functions issue
+    let expression = simplify.simplify(new Expression('5*1'));
+    expect(expression.type).toBe('integer');
+    expect(expression.value).toBe(5);
   })
 })
