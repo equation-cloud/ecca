@@ -1,3 +1,5 @@
+// All the imports to be exported to user
+
 import { 
   Expression,
   Variable
@@ -24,7 +26,9 @@ import {
   EqualsElement
 } from './elements'
 import { generateRawTeX, generateDecoratedTeX } from './tex-output'
-import { simplify } from './simplify'
+import { simplify } from './simplification/simplify'
+
+// expressions and classes requried for using them
 
 export { 
   Expression,
@@ -55,4 +59,5 @@ export {
 // TeX output functions
 export { generateRawTeX, generateDecoratedTeX }
 
+// Simplification
 export { simplify }

@@ -1,4 +1,4 @@
-import { Expression } from './expression'
+import { Expression } from './../expression'
 import {
   IElement,
   IdentifierElement,
@@ -15,7 +15,7 @@ import {
   SumElement,
   SubtractionElement,
   EqualsElement
-} from './elements'
+} from './../elements'
 
 // Functions to deal with rational numbers
 
@@ -29,7 +29,7 @@ function greatestCommonDenominator(a: number, b: number) : number
   return a;
 }
 
-function simplifyRationalNumber(element: FractionalElement | IntegerElement) : IElement
+export function simplifyRationalNumber(element: FractionalElement | IntegerElement) : IElement
 {
   if(element instanceof FractionalElement) {
     let remainder = element.numerator % element.denominator;
@@ -50,7 +50,7 @@ function simplifyIntegerPower(element: PowerElement) : IElement {
   throw new Error('Not implemented')
 }
 
-function simplifyPower(element: PowerElement) : IElement {
+export function simplifyPower(element: PowerElement) : IElement {
   //SPOW-1
   if(element.operands[0].type === 'undefined' || element.operands[1].type === 'undefined') {
     return new UndefinedElement();
@@ -82,7 +82,7 @@ function simplifyPower(element: PowerElement) : IElement {
 
 // Simplifying Products
 
-function simplifyProductRecursive(operands : IElement[]) : IElement[] {
+export function simplifyProductRecursive(operands : IElement[]) : IElement[] {
   throw new Error('Not Implemented');
 }
 
