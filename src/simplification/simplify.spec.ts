@@ -27,7 +27,7 @@ describe('Simplification: Undefined', () => {
   })
 })
 
-
+/*
 describe('Simplification: Product (SPRD-1)', () => {
   it('should return undefined if any of the operands are undefined', () => {
     let expression = new Expression('1*4.23*x*null')
@@ -95,4 +95,4 @@ describe('Simplification: Product (SPRDREC-1)', () => {
     expect(output.length).toBe(1);
     expect(output[0]).toBe(notOne);
   })
-})
+})*/

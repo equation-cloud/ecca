@@ -22,11 +22,11 @@ describe('Simplification: Fractional', () => {
     expect(simplified.value).toBe(2292)
   })
   it(('The fraction simplifies then the returned value to be the simplified fraction'), () => {
-    let simplified = simplifyRationalNumber(new FractionalElement(7, 35))
+    let simplified = simplifyRationalNumber(new FractionalElement(7, 35)) as FractionalElement
     expect(simplified.type).toBe('fractional')
     expect(simplified.numerator).toBe(1)
     expect(simplified.denominator).toBe(5)
-    simplified = simplifyRationalNumber(new FractionalElement(918, 1326))
+    simplified = simplifyRationalNumber(new FractionalElement(918, 1326)) as FractionalElement
     expect(simplified.type).toBe('fractional')
     expect(simplified.numerator).toBe(9)
     expect(simplified.denominator).toBe(13)

@@ -18,17 +18,17 @@
   },
   "homepage": "https://github.com/equation-cloud/ecca#readme",
   "dependencies": {
-    "chevrotain": "^0.28.1"
+    "chevrotain": "*"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.5.47",
-    "coveralls": "^2.12.0",
-    "jasmine-core": "^2.5.2",
-    "karma": "^1.5.0",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-typescript": "^2.1.7",
-    "tslint": "^5.0.0",
-    "typescript": "~2.1.6"
+    "@types/jasmine": "*",
+    "coveralls": "*",
+    "jasmine-core": "*",
+    "karma": "*",
+    "karma-firefox-launcher": "*",
+    "karma-jasmine": "*",
+    "karma-typescript": "*",
+    "tslint": "*",
+    "typescript": "*"
   }
 }

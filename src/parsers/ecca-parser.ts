@@ -43,7 +43,9 @@ export class EccaParser implements IParser {
   private parser : Parser = null;
 
   constructor(){
-    this.lexer = new chev.Lexer(allTokens);
+    this.lexer = new chev.Lexer(allTokens, {
+      positionTracking: "onlyOffset"
+    });
     this.parser = new Parser();
   }
 

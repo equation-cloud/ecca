@@ -29,7 +29,7 @@ function greatestCommonDenominator(a: number, b: number) : number
   return a;
 }
 
-export function simplifyRationalNumber(element: FractionalElement | IntegerElement) : IElement
+export function simplifyRationalNumber(element: FractionalElement | IntegerElement) : FractionalElement | IntegerElement
 {
   if(element instanceof FractionalElement) {
     let remainder = element.numerator % element.denominator;
@@ -42,6 +42,16 @@ export function simplifyRationalNumber(element: FractionalElement | IntegerEleme
   } else {
     return element;
   }
+}
+
+export function simplifyRationalNumberExpression(element: IElement) : IntegerElement | FractionalElement | UndefinedElement
+{
+  throw new Error('Not Implemented');
+}
+
+export function simplifyRationalNumberExpressionRecursive(element: IElement) : IntegerElement | FractionalElement | UndefinedElement
+{
+  throw new Error('Not Implemented');
 }
 
 // Functions to deal with powers
