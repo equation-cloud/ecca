@@ -46,12 +46,47 @@ export function simplifyRationalNumber(element: FractionalElement | IntegerEleme
 
 export function simplifyRationalNumberExpression(element: IElement) : IntegerElement | FractionalElement | UndefinedElement
 {
-  throw new Error('Not Implemented');
+  let simplifiedExpression = simplifyRationalNumberExpressionRecursive(element)
+  if (simplifiedExpression.type === 'undefined') {
+    return simplifiedExpression
+  }
+  return simplifyRationalNumber(simplifiedExpression)
 }
 
 export function simplifyRationalNumberExpressionRecursive(element: IElement) : IntegerElement | FractionalElement | UndefinedElement
 {
-  throw new Error('Not Implemented');
+  if (element instanceof IntegerElement) {
+    return element
+  }
+  if (element instanceof FractionalElement) {
+    if (element.denominator === 0) {
+      return new UndefinedElement()
+    } else {
+      return element
+    }
+  }
+  console.log(element)
+  if (element.operands.length === 1) {
+    let simplifiedOperand = simplifyRationalNumberExpressionRecursive(element.operands[0])
+    console.log(simplifiedOperand)
+    if (simplifiedOperand.type === 'undefined') {
+      console.log('Here')
+      return new UndefinedElement()
+    } else if (element instanceof SumElement) {
+      return simplifiedOperand
+    } else if (element instanceof SubtractionElement) {
+      return evaluateProduct(new IntegerElement('-1'), simplifiedOperand)
+    }
+  }
+  throw new Error('Not implemented')
+}
+
+function evaluateProduct(left: IntegerElement | FractionalElement, right: IntegerElement | FractionalElement) {
+  if (left instanceof IntegerElement) {
+    if (right instanceof IntegerElement) {
+      return new IntegerElement(left.value * right.value)
+    }
+  }
 }
 
 // Functions to deal with powers

@@ -10,7 +10,7 @@ import {
   PowerElement
 } from './../elements'
 
-describe('Simplification: simplifyRationalNumberExpression', () => {
+describe('Simplification: simplifyRationalNumberExpressionRecursive', () => {
   it('should immediately return IntegerElements', () => {
     let integerElement = new IntegerElement('5')
     expect(simplifyRationalNumberExpressionRecursive(integerElement)).toBe(integerElement)

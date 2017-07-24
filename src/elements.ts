@@ -45,8 +45,12 @@ export abstract class ValueElement implements IElement {
 }
 
 export class IntegerElement extends ValueElement {
-  constructor(value : string) {
-    super('integer', parseInt(value))
+  constructor(value : string | number) {
+    if (typeof(value) === 'number') {
+      super('integer', value)
+    } else {
+      super('integer', parseInt(value))
+    }
   }
 }
 

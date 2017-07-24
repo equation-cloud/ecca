@@ -2,7 +2,7 @@ import { simplifyPower } from './simplify'
 import { Expression } from './../expression'
 import { PowerElement } from './../elements'
 
-// SPOW-1
+/*// SPOW-1
 describe('Simplification: Power (SPOW-1)', () => {
   it('should return undefined if either operand is undefined', () => {
     expect(simplifyPower(new Expression('1^null').ElementTree as PowerElement).type).toBe('undefined')
@@ -71,4 +71,4 @@ describe('Simplification: Power (SPOW-5)', () => {
     let expression = new Expression('x^y').ElementTree as PowerElement
     expect(simplifyPower(expression)).toBe(expression)
   })
-});
+});*/
